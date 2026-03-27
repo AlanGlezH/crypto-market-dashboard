@@ -31,7 +31,13 @@ function App() {
         ) : isPending ? (
           <SkeletonTable />
         ) : (
-          <MarketTable coins={data ?? []} />
+          <MarketTable
+            coins={data ?? []}
+            onSelectCoin={() => {
+              /* Detail drawer — Step 26 */
+              console.log("onSelectCoin");
+            }}
+          />
         )}
       </main>
     </div>

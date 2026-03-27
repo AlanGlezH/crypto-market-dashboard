@@ -1,3 +1,4 @@
+import type { KeyboardEvent } from 'react'
 import type { CoinMarket } from '../../api/types'
 import {
   formatMarketCap,
@@ -8,6 +9,8 @@ import { Sparkline } from './Sparkline'
 
 export type TableRowProps = {
   coin: CoinMarket
+  /** When set, row is focusable and activates with Enter/Space (and click). */
+  onActivate?: () => void
 }
 
 function Change24hCell({ pct }: { pct: number | null }) {
@@ -38,9 +41,31 @@ function Change24hCell({ pct }: { pct: number | null }) {
   )
 }
 
-export function TableRow({ coin }: TableRowProps) {
+export function TableRow({ coin, onActivate }: TableRowProps) {
+  
+  function handleKeyDown(e: KeyboardEvent<HTMLTableRowElement>) {
+    if (!onActivate) return
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault()
+      onActivate()
+    }
+  }
+
+  const interactive = Boolean(onActivate)
+  const label = `${coin.name} (${coin.symbol.toUpperCase()})`
+
   return (
-    <tr className="border-b border-slate-100 last:border-b-0">
+    <tr
+      aria-label={interactive ? `View details: ${label}` : undefined}
+      tabIndex={interactive ? 0 : undefined}
+      className={`border-b border-slate-100 last:border-b-0 ${
+        interactive
+          ? 'cursor-pointer hover:bg-slate-50/80 focus-visible:bg-slate-50/80 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-slate-400'
+          : ''
+      }`}
+      onClick={interactive ? onActivate : undefined}
+      onKeyDown={interactive ? handleKeyDown : undefined}
+    >
       <td className="px-4 py-3 tabular-nums text-slate-700">
         {coin.market_cap_rank ?? '—'}
       </td>

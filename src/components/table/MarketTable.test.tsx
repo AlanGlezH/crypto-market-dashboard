@@ -1,6 +1,6 @@
 import { render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 import type { CoinMarket } from '../../api/types'
 import { MarketTable } from './MarketTable'
 
@@ -92,6 +92,36 @@ describe('MarketTable', () => {
     await user.click(coinBtn)
     expect(coinHeader).toHaveAttribute('aria-sort', 'descending')
     expect(firstRow()).toHaveTextContent('Ethereum')
+  })
+
+  it('toggles sort when a header button is focused and Space is pressed', async () => {
+    const user = userEvent.setup()
+    render(<MarketTable coins={FIXTURE_COINS} />)
+
+    const table = screen.getByRole('table')
+    const rankHeader = within(table).getByRole('columnheader', {
+      name: /^rank$/i,
+    })
+    const rankBtn = within(rankHeader).getByRole('button', { name: /^rank$/i })
+    rankBtn.focus()
+    await user.keyboard(' ')
+    expect(rankHeader).toHaveAttribute('aria-sort', 'ascending')
+  })
+
+  it('calls onSelectCoin from row keyboard (Enter and Space)', async () => {
+    const user = userEvent.setup()
+    const onSelectCoin = vi.fn()
+    render(<MarketTable coins={FIXTURE_COINS} onSelectCoin={onSelectCoin} />)
+
+    const ethRow = screen.getByRole('row', {
+      name: /View details: Ethereum/i,
+    })
+    ethRow.focus()
+    await user.keyboard('{Enter}')
+    expect(onSelectCoin).toHaveBeenLastCalledWith('ethereum')
+    onSelectCoin.mockClear()
+    await user.keyboard(' ')
+    expect(onSelectCoin).toHaveBeenLastCalledWith('ethereum')
   })
 
   it('filters rows by name or symbol as the user types (case-insensitive)', async () => {

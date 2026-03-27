@@ -37,9 +37,11 @@ const MARKET_TABLE_COLUMNS = [
 
 export type MarketTableProps = {
   coins: CoinMarket[]
+  /** Stub until detail drawer (Step 26); keyboard/mouse row activation. */
+  onSelectCoin?: (id: string) => void
 }
 
-export function MarketTable({ coins }: MarketTableProps) {
+export function MarketTable({ coins, onSelectCoin }: MarketTableProps) {
   const [searchQuery, setSearchQuery] = useState('')
   const [sort, setSort] = useState<{
     column: MarketSortColumn
@@ -86,7 +88,7 @@ export function MarketTable({ coins }: MarketTableProps) {
     <div className="rounded-lg border border-slate-200 bg-white shadow-sm">
       <div className="border-b border-slate-200 px-4 py-3">
         <SearchInput
-          id='market-search'
+          id="market-search"
           label="Search markets"
           value={searchQuery}
           onChange={setSearchQuery}
@@ -117,7 +119,13 @@ export function MarketTable({ coins }: MarketTableProps) {
             </thead>
             <tbody>
               {sortedCoins.map((coin) => (
-                <TableRow key={coin.id} coin={coin} />
+                <TableRow
+                  key={coin.id}
+                  coin={coin}
+                  onActivate={
+                    onSelectCoin ? () => onSelectCoin(coin.id) : undefined
+                  }
+                />
               ))}
             </tbody>
           </table>
