@@ -1,6 +1,6 @@
 import { render, screen, within } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
-import { SkeletonTable } from './SkeletonTable'
+import { SkeletonTable } from '../SkeletonTable'
 
 describe('SkeletonTable', () => {
   it('renders a busy table shell with header labels and 20 body rows', () => {

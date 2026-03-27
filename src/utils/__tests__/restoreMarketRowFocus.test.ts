@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, it } from 'vitest'
 import {
   captureSelectedMarketRow,
   restoreMarketRowFocus,
-} from './restoreMarketRowFocus'
+} from '../restoreMarketRowFocus'
 
 describe('restoreMarketRowFocus', () => {
   beforeEach(() => {

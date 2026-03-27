@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { getCoinImageSrc } from './coinDetailDisplay'
+import { getCoinImageSrc } from '../coinDetailDisplay'
 
 describe('getCoinImageSrc', () => {
   it('returns string URLs as-is', () => {

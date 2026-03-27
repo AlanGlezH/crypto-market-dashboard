@@ -3,7 +3,7 @@ import {
   buildDescriptionExcerpt,
   COIN_DESCRIPTION_EXCERPT_MAX,
   normalizeDescriptionEn,
-} from './coinDescription'
+} from '../coinDescription'
 
 describe('normalizeDescriptionEn', () => {
   it('returns empty for undefined', () => {

@@ -41,7 +41,7 @@ CoinGecko applies **rate limits** (e.g. HTTP 429). The app surfaces a dedicated 
 
 ## Verification
 
-Cross-check acceptance criteria in [REQUIREMENTS.md](./REQUIREMENTS.md); automated tests cover the main flows (markets load, errors + retry, sort, search empty state, drawer from URL, a11y-oriented drawer tests, description toggle, etc.). Run **`npm test`** before merge.
+Cross-check acceptance criteria in [REQUIREMENTS.md](./REQUIREMENTS.md); automated tests live under **`src/**/__tests__/**`** and cover the main flows (markets load, errors + retry, sort, search empty state, drawer from URL, a11y-oriented drawer tests, description toggle, etc.). Run **`npm test`** before merge.
 
 ## AI usage
 

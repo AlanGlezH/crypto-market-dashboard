@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
-import type { CoinMarket } from '../api/types'
-import { coinMatchesSearch, filterCoinsBySearch } from './marketSearch'
+import type { CoinMarket } from '../../api/types'
+import { coinMatchesSearch, filterCoinsBySearch } from '../marketSearch'
 
 const COIN: CoinMarket = {
   id: 'bitcoin',

@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest'
 import {
   normalizeSparklinePrices,
   sparklineSortValue,
-} from './sparklinePrices'
+} from '../sparklinePrices'
 
 describe('sparklinePrices', () => {
   it('normalizeSparklinePrices drops non-finite values', () => {

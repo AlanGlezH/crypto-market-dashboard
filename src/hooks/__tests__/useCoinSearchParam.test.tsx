@@ -1,6 +1,6 @@
 import { renderHook, act } from '@testing-library/react'
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import { useCoinSearchParam } from './useCoinSearchParam'
+import { useCoinSearchParam } from '../useCoinSearchParam'
 
 describe('useCoinSearchParam', () => {
   afterEach(() => {

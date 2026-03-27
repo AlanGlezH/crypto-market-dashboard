@@ -3,12 +3,12 @@ import { render, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import type { ReactElement } from 'react'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import * as coingecko from '../../api/coingecko'
-import type { CoinDetail, MarketChart } from '../../api/types'
-import { createQueryClient } from '../../queryClient'
-import { DetailDrawer } from './DetailDrawer'
+import * as coingecko from '../../../api/coingecko'
+import type { CoinDetail, MarketChart } from '../../../api/types'
+import { createQueryClient } from '../../../queryClient'
+import { DetailDrawer } from '../DetailDrawer'
 
-vi.mock('../../api/coingecko', () => ({
+vi.mock('../../../api/coingecko', () => ({
   fetchCoinDetail: vi.fn(),
   fetchMarketChart: vi.fn(),
 }))

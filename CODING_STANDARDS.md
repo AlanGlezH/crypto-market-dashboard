@@ -35,7 +35,8 @@ These guidelines apply to all code in this repository. For product behavior and 
 
 ## Testing and quality
 
-- **Tests** should cover behavior that matters for requirements and regressions; follow patterns in existing `*.test.tsx` files.
+- **Test file location:** Put tests only under a **`__tests__`** directory next to the code they exercise (e.g. `src/components/table/__tests__/MarketTable.test.tsx`, `src/utils/__tests__/format.test.ts`, `src/__tests__/App.test.tsx` for app-level tests). **Do not** place `*.test.ts(x)` beside implementation files in `src/`.
+- **Tests** should cover behavior that matters for requirements and regressions; follow patterns in existing tests under `__tests__/`.
 - Before considering work complete when behavior or types change, run **`npm run lint`** and **`npm test`**.
 
 ## AI assistants

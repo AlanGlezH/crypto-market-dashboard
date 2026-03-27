@@ -3,7 +3,7 @@ import {
   COIN_QUERY_KEY,
   getCoinIdFromSearch,
   hrefWithCoinParam,
-} from './coinSearchParam'
+} from '../coinSearchParam'
 
 describe('coinSearchParam', () => {
   it('getCoinIdFromSearch reads coin id', () => {

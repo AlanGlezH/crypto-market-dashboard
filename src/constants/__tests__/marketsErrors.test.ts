@@ -2,8 +2,8 @@ import { describe, expect, it } from 'vitest'
 import {
   MARKETS_ERROR_MESSAGES,
   getMarketsErrorDisplay,
-} from './marketsErrors'
-import { RateLimitError } from '../utils/error/errors'
+} from '../marketsErrors'
+import { RateLimitError } from '../../utils/error/errors'
 
 describe('getMarketsErrorDisplay', () => {
   it('detects RateLimitError', () => {

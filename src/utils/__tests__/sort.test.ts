@@ -1,11 +1,11 @@
 import { describe, expect, it } from 'vitest'
-import type { CoinMarket } from '../api/types'
+import type { CoinMarket } from '../../api/types'
 import {
   DEFAULT_MARKET_SORT,
   sortCoins,
   type MarketSortColumn,
   type SortDirection,
-} from './sort'
+} from '../sort'
 
 const A: CoinMarket = {
   id: 'a',

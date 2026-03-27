@@ -2,17 +2,17 @@ import { QueryClientProvider } from '@tanstack/react-query'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import type { CoinMarket } from './api/types'
-import App from './App'
-import { useMarkets } from './hooks/useMarkets'
-import { createQueryClient } from './queryClient'
-import { RateLimitError } from './utils/error/errors'
+import type { CoinMarket } from '../api/types'
+import App from '../App'
+import { useMarkets } from '../hooks/useMarkets'
+import { createQueryClient } from '../queryClient'
+import { RateLimitError } from '../utils/error/errors'
 
-vi.mock('./hooks/useMarkets', () => ({
+vi.mock('../hooks/useMarkets', () => ({
   useMarkets: vi.fn(),
 }))
 
-vi.mock('./components/detail/DetailDrawer', () => ({
+vi.mock('../components/detail/DetailDrawer', () => ({
   DetailDrawer: function MockDetailDrawer({
     coinId,
   }: {

@@ -57,6 +57,7 @@ export function Sparkline({ prices, change24hPercent }: SparklineProps) {
         height={SPARKLINE_H}
         data={data}
         margin={{ top: 4, right: 4, left: 4, bottom: 4 }}
+        accessibilityLayer={false}
       >
         <XAxis dataKey="i" type="number" hide padding={{ left: 0, right: 0 }} />
         <YAxis hide domain={['dataMin', 'dataMax']} />

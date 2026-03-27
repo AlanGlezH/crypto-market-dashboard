@@ -3,12 +3,12 @@ import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import type { ReactElement } from 'react'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import * as coingecko from '../../api/coingecko'
-import type { MarketChart } from '../../api/types'
-import { createQueryClient } from '../../queryClient'
-import { PriceChart } from './PriceChart'
+import * as coingecko from '../../../api/coingecko'
+import type { MarketChart } from '../../../api/types'
+import { createQueryClient } from '../../../queryClient'
+import { PriceChart } from '../PriceChart'
 
-vi.mock('../../api/coingecko', () => ({
+vi.mock('../../../api/coingecko', () => ({
   fetchMarketChart: vi.fn(),
 }))
 

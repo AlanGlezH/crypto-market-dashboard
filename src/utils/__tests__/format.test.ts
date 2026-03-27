@@ -4,7 +4,7 @@ import {
   formatMarketCap,
   formatPercentage,
   formatUSD,
-} from './format'
+} from '../format'
 
 describe('formatUSD', () => {
   it('formats whole and fractional dollars', () => {

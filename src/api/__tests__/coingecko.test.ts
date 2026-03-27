@@ -5,10 +5,10 @@ import {
   fetchCoinDetail,
   fetchMarkets,
   fetchMarketChart,
-} from './coingecko'
-import type { CoinDetail } from './types'
-import type { CoinMarket } from './types'
-import { ApiError, RateLimitError } from '../utils/error/errors'
+} from '../coingecko'
+import type { CoinDetail } from '../types'
+import type { CoinMarket } from '../types'
+import { ApiError, RateLimitError } from '../../utils/error/errors'
 
 describe('coingeckoApiFetch', () => {
   beforeEach(() => {

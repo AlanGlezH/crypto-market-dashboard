@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, expect, it } from 'vitest'
-import { CoinDescription } from './CoinDescription'
+import { CoinDescription } from '../CoinDescription'
 
 const LONG_PLAIN = `${'Lorem ipsum dolor sit amet. '.repeat(14)}Tail end marker.`
 

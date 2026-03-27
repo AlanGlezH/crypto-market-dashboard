@@ -5,12 +5,12 @@ import {
 import { renderHook, waitFor } from '@testing-library/react'
 import type { ReactNode } from 'react'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import * as coingecko from '../api/coingecko'
-import type { CoinDetail } from '../api/types'
-import { createQueryClient } from '../queryClient'
-import { useCoinDetail } from './useCoinDetail'
+import * as coingecko from '../../api/coingecko'
+import type { CoinDetail } from '../../api/types'
+import { createQueryClient } from '../../queryClient'
+import { useCoinDetail } from '../useCoinDetail'
 
-vi.mock('../api/coingecko', () => ({
+vi.mock('../../api/coingecko', () => ({
   fetchCoinDetail: vi.fn(),
 }))
 

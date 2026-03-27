@@ -35,7 +35,7 @@ Use this file **step by step**. After each step, **pause** so you can **review**
 - Create Vite project: React + TypeScript (official template).
 - Confirm `npm run dev` works and shows a placeholder page.
 - Add **Vitest** + **@testing-library/react** + **@testing-library/jest-dom** + **@testing-library/user-event** + **jsdom**; `vitest.config.ts` with the React plugin; `test` script in `package.json`.
-- Add a smoke test (e.g. `App.test.tsx`) that renders `<App />` and asserts something visible (e.g. heading or root text).
+- Add a smoke test (e.g. `src/__tests__/App.test.tsx`) that renders `<App />` and asserts something visible (e.g. heading or root text).
 
 **Tests**
 

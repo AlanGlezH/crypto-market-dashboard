@@ -1,6 +1,6 @@
 import { render } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
-import { Sparkline } from './Sparkline'
+import { Sparkline } from '../Sparkline'
 
 describe('Sparkline', () => {
   it('does not throw when prices are missing or empty', () => {
