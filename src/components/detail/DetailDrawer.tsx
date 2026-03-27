@@ -1,5 +1,6 @@
 import { useEffect, useId, useRef, type ReactNode } from 'react'
 import { useCoinDetail } from '../../hooks/useCoinDetail'
+import { CoinDescription } from './CoinDescription'
 import { CoinDetailSummary } from './CoinDetailSummary'
 import { PriceChart } from './PriceChart'
 import { SkeletonDetail } from './SkeletonDetail'
@@ -81,6 +82,10 @@ export function DetailDrawer({ coinId, onClose, children }: DetailDrawerProps) {
             <>
               <CoinDetailSummary detail={data} />
               <PriceChart coinId={coinId} />
+              <CoinDescription
+                coinId={coinId}
+                descriptionEn={data.description?.en}
+              />
               {children}
             </>
           ) : null}
