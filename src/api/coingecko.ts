@@ -1,6 +1,15 @@
 import { ApiError, RateLimitError } from '../utils/error/errors'
+import type { CoinMarket } from './types'
 
 export const COINGECKO_API_V3_URL = 'https://api.coingecko.com/api/v3'
+
+const MARKETS_SEARCH = new URLSearchParams({
+  vs_currency: 'usd',
+  order: 'market_cap_desc',
+  per_page: '20',
+  page: '1',
+  sparkline: 'true',
+})
 
 /**
  * GET JSON from CoinGecko v3. Throws {@link RateLimitError} on 429,
@@ -22,4 +31,9 @@ export async function coingeckoApiFetch<T>(path: string): Promise<T> {
 
   const body: unknown = await res.json()
   return body as T
+}
+
+/** Top 20 coins by USD market cap with 7d sparkline (FR-1.1). */
+export function fetchMarkets(): Promise<CoinMarket[]> {
+  return coingeckoApiFetch<CoinMarket[]>(`/coins/markets?${MARKETS_SEARCH.toString()}`)
 }
