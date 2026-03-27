@@ -4,6 +4,7 @@ import { ChartLinePlot } from './ChartLinePlot'
 function ChartLoadingSkeleton() {
   return (
     <div
+      role="status"
       className="mt-3 h-[220px] animate-pulse rounded-lg bg-slate-200"
       aria-busy="true"
       aria-label="Loading price chart"

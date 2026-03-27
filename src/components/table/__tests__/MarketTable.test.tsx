@@ -1,5 +1,6 @@
 import { render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import { axe } from 'jest-axe'
 import { describe, expect, it, vi } from 'vitest'
 import type { CoinMarket } from '../../../api/types'
 import { MarketTable } from '../MarketTable'
@@ -155,5 +156,10 @@ describe('MarketTable', () => {
     expect(screen.getByText('No market data')).toBeInTheDocument()
     expect(screen.queryByRole('searchbox')).not.toBeInTheDocument()
     expect(screen.queryByRole('table')).not.toBeInTheDocument()
+  })
+
+  it('has no axe-detectable a11y violations', async () => {
+    const { container } = render(<MarketTable coins={FIXTURE_COINS} />)
+    expect(await axe(container)).toHaveNoViolations()
   })
 })
