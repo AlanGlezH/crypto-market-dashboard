@@ -1,5 +1,5 @@
 import { ApiError, RateLimitError } from '../utils/error/errors'
-import type { CoinDetail, CoinMarket } from './types'
+import type { CoinDetail, CoinMarket, MarketChart } from './types'
 
 export const COINGECKO_API_V3_URL = 'https://api.coingecko.com/api/v3'
 
@@ -16,6 +16,11 @@ const COIN_DETAIL_SEARCH = new URLSearchParams({
   tickers: 'false',
   community_data: 'false',
   developer_data: 'false',
+})
+
+const MARKET_CHART_SEARCH = new URLSearchParams({
+  vs_currency: 'usd',
+  days: '7',
 })
 
 /**
@@ -49,4 +54,13 @@ export function fetchMarkets(): Promise<CoinMarket[]> {
 export function fetchCoinDetail(id: string): Promise<CoinDetail> {
   const path = `/coins/${encodeURIComponent(id)}?${COIN_DETAIL_SEARCH.toString()}`
   return coingeckoApiFetch<CoinDetail>(path)
+}
+
+/** 7-day USD price series for detail chart (FR-4.4). */
+export async function fetchMarketChart(id: string): Promise<MarketChart> {
+  const path = `/coins/${encodeURIComponent(id)}/market_chart?${MARKET_CHART_SEARCH.toString()}`
+  const body = await coingeckoApiFetch<{
+    prices: [number, number][]
+  }>(path)
+  return { prices: body.prices ?? [] }
 }

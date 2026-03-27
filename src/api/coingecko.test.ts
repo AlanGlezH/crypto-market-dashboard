@@ -4,6 +4,7 @@ import {
   coingeckoApiFetch,
   fetchCoinDetail,
   fetchMarkets,
+  fetchMarketChart,
 } from './coingecko'
 import type { CoinDetail } from './types'
 import type { CoinMarket } from './types'
@@ -211,5 +212,61 @@ describe('fetchCoinDetail', () => {
     } as Response)
 
     await expect(fetchCoinDetail('ethereum')).resolves.toEqual(detail)
+  })
+})
+
+describe('fetchMarketChart', () => {
+  beforeEach(() => {
+    vi.stubGlobal('fetch', vi.fn() as unknown as typeof fetch)
+  })
+
+  afterEach(() => {
+    vi.unstubAllGlobals()
+  })
+
+  it('requests /coins/{id}/market_chart with FR-4.4 query params', async () => {
+    vi.mocked(fetch).mockResolvedValue({
+      status: 200,
+      ok: true,
+      text: async () => '{"prices":[]}',
+      json: async () => ({ prices: [] as [number, number][] }),
+    } as Response)
+
+    await fetchMarketChart('bitcoin')
+
+    expect(fetch).toHaveBeenCalledTimes(1)
+    const url = String(vi.mocked(fetch).mock.calls[0][0])
+    expect(url.startsWith(`${COINGECKO_API_V3_URL}/coins/bitcoin/market_chart?`)).toBe(
+      true,
+    )
+    const { searchParams } = new URL(url)
+    expect(searchParams.get('vs_currency')).toBe('usd')
+    expect(searchParams.get('days')).toBe('7')
+  })
+
+  it('maps JSON prices to MarketChart', async () => {
+    const prices: [number, number][] = [
+      [1_700_000_000_000, 42_000],
+      [1_700_000_360_000, 43_000],
+    ]
+    vi.mocked(fetch).mockResolvedValue({
+      status: 200,
+      ok: true,
+      text: async () => JSON.stringify({ prices, market_caps: [], total_volumes: [] }),
+      json: async () => ({ prices, market_caps: [], total_volumes: [] }),
+    } as Response)
+
+    await expect(fetchMarketChart('btc')).resolves.toEqual({ prices })
+  })
+
+  it('defaults missing prices to empty array', async () => {
+    vi.mocked(fetch).mockResolvedValue({
+      status: 200,
+      ok: true,
+      text: async () => '{}',
+      json: async () => ({}),
+    } as Response)
+
+    await expect(fetchMarketChart('x')).resolves.toEqual({ prices: [] })
   })
 })
