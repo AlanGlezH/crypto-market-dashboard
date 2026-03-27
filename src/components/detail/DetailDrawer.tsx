@@ -54,7 +54,7 @@ export function DetailDrawer({ coinId, onClose, children }: DetailDrawerProps) {
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}
-        className="relative flex h-full w-full max-w-[420px] flex-col border-l border-slate-200/80 bg-white shadow-[0_0_40px_rgba(15,23,42,0.12)]"
+        className="relative flex h-full w-full min-w-0 flex-col border-l-0 bg-white shadow-[0_0_40px_rgba(15,23,42,0.12)] md:max-w-[420px] md:border-l md:border-slate-200/80"
       >
         {data && !isPending && !isError ? (
           <DrawerHeaderAsset
