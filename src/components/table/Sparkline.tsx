@@ -1,4 +1,5 @@
 import { Line, LineChart, XAxis, YAxis } from 'recharts'
+import { normalizeSparklinePrices } from '../../utils/sparklinePrices'
 
 const STROKE_POSITIVE = '#059669' // tailwind emerald-600
 const STROKE_NEGATIVE = '#dc2626' // tailwind red-600
@@ -7,17 +8,6 @@ const STROKE_NEUTRAL = '#475569' // tailwind slate-600
 export type SparklineProps = {
   prices: number[] | undefined
   change24hPercent: number | null
-}
-
-/**
- * Normalized series for display. For client-side sort on the 7d column (later),
- * use the **last** value as the numeric key: `normalizeSparklinePrices(prices).at(-1)`.
- */
-export function normalizeSparklinePrices(
-  prices: number[] | undefined,
-): number[] {
-  if (!prices?.length) return []
-  return prices.filter((p) => typeof p === 'number' && Number.isFinite(p))
 }
 
 function strokeFor24h(pct: number | null): string {

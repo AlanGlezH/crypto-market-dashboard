@@ -1,6 +1,6 @@
 import { render } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
-import { normalizeSparklinePrices, Sparkline } from './Sparkline'
+import { Sparkline } from './Sparkline'
 
 describe('Sparkline', () => {
   it('does not throw when prices are missing or empty', () => {
@@ -32,8 +32,4 @@ describe('Sparkline', () => {
     expect(container.querySelector('svg')).toBeInTheDocument()
   })
 
-  it('normalizeSparklinePrices drops non-finite values', () => {
-    expect(normalizeSparklinePrices([1, NaN, 3])).toEqual([1, 3])
-    expect(normalizeSparklinePrices(undefined)).toEqual([])
-  })
 })

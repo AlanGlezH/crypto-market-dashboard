@@ -1,4 +1,5 @@
 import { render, screen, within } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import { describe, expect, it } from 'vitest'
 import type { CoinMarket } from '../../api/types'
 import { MarketTable } from './MarketTable'
@@ -64,5 +65,30 @@ describe('MarketTable', () => {
 
     expect(ethRow.querySelector('[aria-hidden="true"]')).toHaveTextContent('▼')
     expect(ethRow).toHaveTextContent('-0.82%')
+  })
+
+  it('sorts when a header button is clicked and exposes aria-sort on the active column', async () => {
+    const user = userEvent.setup()
+    render(<MarketTable coins={FIXTURE_COINS} />)
+
+    const table = screen.getByRole('table')
+    const tbody = table.querySelector('tbody') as HTMLElement
+    const firstRow = () => within(tbody).getAllByRole('row')[0]
+
+    const coinHeader = within(table).getByRole('columnheader', { name: /^coin$/i })
+    const coinBtn = within(coinHeader).getByRole('button', { name: /^coin$/i })
+
+    expect(firstRow()).toHaveTextContent('Bitcoin')
+    expect(
+      within(table).getByRole('columnheader', { name: /^market cap$/i }),
+    ).toHaveAttribute('aria-sort', 'descending')
+
+    await user.click(coinBtn)
+    expect(coinHeader).toHaveAttribute('aria-sort', 'ascending')
+    expect(firstRow()).toHaveTextContent('Bitcoin')
+
+    await user.click(coinBtn)
+    expect(coinHeader).toHaveAttribute('aria-sort', 'descending')
+    expect(firstRow()).toHaveTextContent('Ethereum')
   })
 })
