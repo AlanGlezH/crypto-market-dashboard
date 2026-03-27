@@ -1,5 +1,10 @@
 import { describe, expect, it } from 'vitest'
-import { formatMarketCap, formatPercentage, formatUSD } from './format'
+import {
+  formatDetailDate,
+  formatMarketCap,
+  formatPercentage,
+  formatUSD,
+} from './format'
 
 describe('formatUSD', () => {
   it('formats whole and fractional dollars', () => {
@@ -51,5 +56,18 @@ describe('formatPercentage', () => {
     expect(formatPercentage(null)).toBe('—')
     expect(formatPercentage(undefined)).toBe('—')
     expect(formatPercentage(Number.NaN)).toBe('—')
+  })
+})
+
+describe('formatDetailDate', () => {
+  it('formats valid ISO strings', () => {
+    expect(formatDetailDate('2021-11-10T00:00:00.000Z')).toMatch(/Nov/)
+  })
+
+  it('returns em dash for missing or invalid', () => {
+    expect(formatDetailDate(null)).toBe('—')
+    expect(formatDetailDate(undefined)).toBe('—')
+    expect(formatDetailDate('')).toBe('—')
+    expect(formatDetailDate('not-a-date')).toBe('—')
   })
 })

@@ -36,3 +36,15 @@ export function formatPercentage(value: number | null | undefined): string {
   const sign = value > 0 ? '+' : ''
   return `${sign}${value.toFixed(2)}%`
 }
+
+/** ISO date strings from CoinGecko (e.g. ATH/ATL); invalid or missing → em dash. */
+export function formatDetailDate(iso: string | null | undefined): string {
+  if (!iso) {
+    return '—'
+  }
+  const date = new Date(iso)
+  if (Number.isNaN(date.getTime())) {
+    return '—'
+  }
+  return new Intl.DateTimeFormat('en-US', { dateStyle: 'medium' }).format(date)
+}
