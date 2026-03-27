@@ -33,6 +33,8 @@ describe('MarketTable', () => {
   it('renders column headers and row data with formatting', () => {
     render(<MarketTable coins={FIXTURE_COINS} />)
 
+    expect(screen.getByRole('searchbox')).toBeInTheDocument()
+
     const table = screen.getByRole('table')
     expect(
       within(table).getByRole('columnheader', { name: /^rank$/i }),
@@ -90,5 +92,38 @@ describe('MarketTable', () => {
     await user.click(coinBtn)
     expect(coinHeader).toHaveAttribute('aria-sort', 'descending')
     expect(firstRow()).toHaveTextContent('Ethereum')
+  })
+
+  it('filters rows by name or symbol as the user types (case-insensitive)', async () => {
+    const user = userEvent.setup()
+    render(<MarketTable coins={FIXTURE_COINS} />)
+
+    const search = screen.getByRole('searchbox')
+    await user.type(search, 'eth')
+    expect(screen.getByText('Ethereum')).toBeInTheDocument()
+    expect(screen.queryByText('Bitcoin')).not.toBeInTheDocument()
+
+    await user.clear(search)
+    await user.type(search, 'BITCOIN')
+    expect(screen.getByText('Bitcoin')).toBeInTheDocument()
+    expect(screen.queryByText('Ethereum')).not.toBeInTheDocument()
+  })
+
+  it('shows an empty state when the filter matches nothing', async () => {
+    const user = userEvent.setup()
+    render(<MarketTable coins={FIXTURE_COINS} />)
+
+    await user.type(screen.getByRole('searchbox'), 'zzz')
+
+    expect(screen.getByText('No coins match your search')).toBeInTheDocument()
+    expect(screen.queryByRole('table')).not.toBeInTheDocument()
+  })
+
+  it('shows no-data empty state when the API returns no coins', () => {
+    render(<MarketTable coins={[]} />)
+
+    expect(screen.getByText('No market data')).toBeInTheDocument()
+    expect(screen.queryByRole('searchbox')).not.toBeInTheDocument()
+    expect(screen.queryByRole('table')).not.toBeInTheDocument()
   })
 })

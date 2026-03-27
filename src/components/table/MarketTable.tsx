@@ -1,5 +1,8 @@
 import { useMemo, useState } from 'react'
 import type { CoinMarket } from '../../api/types'
+import { EmptyState } from '../ui/EmptyState'
+import { SearchInput } from '../ui/SearchInput'
+import { filterCoinsBySearch } from '../../utils/marketSearch'
 import {
   DEFAULT_MARKET_SORT,
   defaultSortDirection,
@@ -31,19 +34,26 @@ const MARKET_TABLE_COLUMNS = [
   },
 ] as const
 
+
 export type MarketTableProps = {
   coins: CoinMarket[]
 }
 
 export function MarketTable({ coins }: MarketTableProps) {
+  const [searchQuery, setSearchQuery] = useState('')
   const [sort, setSort] = useState<{
     column: MarketSortColumn
     direction: SortDirection
   }>(DEFAULT_MARKET_SORT)
 
+  const filteredCoins = useMemo(
+    () => filterCoinsBySearch(coins, searchQuery),
+    [coins, searchQuery],
+  )
+
   const sortedCoins = useMemo(
-    () => sortCoins(coins, sort.column, sort.direction),
-    [coins, sort.column, sort.direction],
+    () => sortCoins(filteredCoins, sort.column, sort.direction),
+    [filteredCoins, sort.column, sort.direction],
   )
 
   function handleSort(column: MarketSortColumn) {
@@ -58,30 +68,61 @@ export function MarketTable({ coins }: MarketTableProps) {
     })
   }
 
+  if (coins.length === 0) {
+    return (
+      <div className="rounded-lg border border-slate-200 bg-white shadow-sm">
+        <EmptyState
+          title="No market data"
+          description="Markets will appear here once data loads successfully."
+        />
+      </div>
+    )
+  }
+
+  const showSearchEmpty =
+    filteredCoins.length === 0 && searchQuery.trim() !== ''
+
   return (
-    <div className="overflow-x-auto rounded-lg border border-slate-200 bg-white shadow-sm">
-      <table className="w-full min-w-[760px] border-collapse text-left text-sm">
-        <thead>
-          <tr className="border-b border-slate-200 bg-slate-50">
-            {MARKET_TABLE_COLUMNS.map((col) => (
-              <SortHeader
-                key={col.label}
-                label={col.label}
-                column={col.sortKey}
-                activeColumn={sort.column}
-                direction={sort.direction}
-                align={col.align}
-                onSort={handleSort}
-              />
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {sortedCoins.map((coin) => (
-            <TableRow key={coin.id} coin={coin} />
-          ))}
-        </tbody>
-      </table>
+    <div className="rounded-lg border border-slate-200 bg-white shadow-sm">
+      <div className="border-b border-slate-200 px-4 py-3">
+        <SearchInput
+          id='market-search'
+          label="Search markets"
+          value={searchQuery}
+          onChange={setSearchQuery}
+        />
+      </div>
+      {showSearchEmpty ? (
+        <EmptyState
+          title="No coins match your search"
+          description="Try another name or symbol."
+        />
+      ) : (
+        <div className="overflow-x-auto">
+          <table className="w-full min-w-[760px] border-collapse text-left text-sm">
+            <thead>
+              <tr className="border-b border-slate-200 bg-slate-50">
+                {MARKET_TABLE_COLUMNS.map((col) => (
+                  <SortHeader
+                    key={col.label}
+                    label={col.label}
+                    column={col.sortKey}
+                    activeColumn={sort.column}
+                    direction={sort.direction}
+                    align={col.align}
+                    onSort={handleSort}
+                  />
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {sortedCoins.map((coin) => (
+                <TableRow key={coin.id} coin={coin} />
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
     </div>
   )
 }

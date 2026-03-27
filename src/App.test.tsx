@@ -31,14 +31,15 @@ describe('App', () => {
     } as unknown as ReturnType<typeof useMarkets>)
   })
 
-  it('renders header, main, and markets table shell when loaded', () => {
+  it('renders header and main; empty markets shows no-data state (not a bare table)', () => {
     renderApp()
     expect(
       screen.getByRole('heading', { level: 1, name: /clara market dashboard/i }),
     ).toBeInTheDocument()
     expect(screen.getByRole('main')).toBeInTheDocument()
     expect(screen.getByText(/top 20 by market cap/i)).toBeInTheDocument()
-    expect(screen.getByRole('table')).toBeInTheDocument()
+    expect(screen.getByText('No market data')).toBeInTheDocument()
+    expect(screen.queryByRole('table')).not.toBeInTheDocument()
   })
 
   it('shows rate-limit copy and Retry when markets query hits RateLimitError', async () => {
