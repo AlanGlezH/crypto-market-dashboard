@@ -35,6 +35,13 @@ describe('coingeckoApiFetch', () => {
     )
   })
 
+  it('propagates when fetch rejects before a response', async () => {
+    const err = new TypeError('Failed to fetch')
+    vi.mocked(fetch).mockRejectedValue(err)
+
+    await expect(coingeckoApiFetch('/coins/list')).rejects.toBe(err)
+  })
+
   it('throws ApiError on 500', async () => {
     vi.mocked(fetch).mockResolvedValue({
       status: 500,

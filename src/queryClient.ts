@@ -8,10 +8,8 @@ export function createQueryClient() {
       queries: {
         // Slightly under markets `refetchInterval` (60s) to avoid extra refetches on focus/remount.
         staleTime: 55_000,
-        retry: (failureCount, error) => {
-          console.log({ failureCount, error });
-          return error instanceof RateLimitError ? false : failureCount < 2 
-        }
+        retry: (failureCount, error) =>
+          error instanceof RateLimitError ? false : failureCount < 2,
       },
     },
   })
