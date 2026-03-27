@@ -1,5 +1,5 @@
 import { ApiError, RateLimitError } from '../utils/error/errors'
-import type { CoinMarket } from './types'
+import type { CoinDetail, CoinMarket } from './types'
 
 export const COINGECKO_API_V3_URL = 'https://api.coingecko.com/api/v3'
 
@@ -9,6 +9,13 @@ const MARKETS_SEARCH = new URLSearchParams({
   per_page: '20',
   page: '1',
   sparkline: 'true',
+})
+
+const COIN_DETAIL_SEARCH = new URLSearchParams({
+  localization: 'false',
+  tickers: 'false',
+  community_data: 'false',
+  developer_data: 'false',
 })
 
 /**
@@ -36,4 +43,10 @@ export async function coingeckoApiFetch<T>(path: string): Promise<T> {
 /** Top 20 coins by USD market cap with 7d sparkline (FR-1.1). */
 export function fetchMarkets(): Promise<CoinMarket[]> {
   return coingeckoApiFetch<CoinMarket[]>(`/coins/markets?${MARKETS_SEARCH.toString()}`)
+}
+
+/** Single coin for detail drawer (FR-4.2). */
+export function fetchCoinDetail(id: string): Promise<CoinDetail> {
+  const path = `/coins/${encodeURIComponent(id)}?${COIN_DETAIL_SEARCH.toString()}`
+  return coingeckoApiFetch<CoinDetail>(path)
 }

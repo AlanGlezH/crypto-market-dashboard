@@ -2,8 +2,10 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import {
   COINGECKO_API_V3_URL,
   coingeckoApiFetch,
+  fetchCoinDetail,
   fetchMarkets,
 } from './coingecko'
+import type { CoinDetail } from './types'
 import type { CoinMarket } from './types'
 import { ApiError, RateLimitError } from '../utils/error/errors'
 
@@ -144,5 +146,70 @@ describe('fetchMarkets', () => {
     } as Response)
 
     await expect(fetchMarkets()).rejects.toBeInstanceOf(RateLimitError)
+  })
+})
+
+describe('fetchCoinDetail', () => {
+  beforeEach(() => {
+    vi.stubGlobal('fetch', vi.fn() as unknown as typeof fetch)
+  })
+
+  afterEach(() => {
+    vi.unstubAllGlobals()
+  })
+
+  it('requests /coins/{id} with FR-4.2 query params', async () => {
+    vi.mocked(fetch).mockResolvedValue({
+      status: 200,
+      ok: true,
+      text: async () => '{}',
+      json: async () => ({ id: 'bitcoin', name: 'Bitcoin', symbol: 'btc' }),
+    } as Response)
+
+    await fetchCoinDetail('bitcoin')
+
+    expect(fetch).toHaveBeenCalledTimes(1)
+    const url = String(vi.mocked(fetch).mock.calls[0][0])
+    expect(url.startsWith(`${COINGECKO_API_V3_URL}/coins/bitcoin?`)).toBe(true)
+    const { searchParams } = new URL(url)
+    expect(searchParams.get('localization')).toBe('false')
+    expect(searchParams.get('tickers')).toBe('false')
+    expect(searchParams.get('community_data')).toBe('false')
+    expect(searchParams.get('developer_data')).toBe('false')
+  })
+
+  it('encodes coin id in path', async () => {
+    vi.mocked(fetch).mockResolvedValue({
+      status: 200,
+      ok: true,
+      text: async () => '{}',
+      json: async () => ({ id: 'x', name: 'X', symbol: 'x' }),
+    } as Response)
+
+    await fetchCoinDetail('weird id')
+
+    const url = String(vi.mocked(fetch).mock.calls[0][0])
+    expect(url).toContain('/coins/weird%20id?')
+  })
+
+  it('returns CoinDetail on 200', async () => {
+    const detail: CoinDetail = {
+      id: 'ethereum',
+      name: 'Ethereum',
+      symbol: 'eth',
+      market_data: {
+        current_price: { usd: 3000 },
+        ath: { usd: 4800 },
+        ath_date: { usd: '2021-11-01T00:00:00.000Z' },
+      },
+    }
+    vi.mocked(fetch).mockResolvedValue({
+      status: 200,
+      ok: true,
+      text: async () => JSON.stringify(detail),
+      json: async () => detail,
+    } as Response)
+
+    await expect(fetchCoinDetail('ethereum')).resolves.toEqual(detail)
   })
 })
