@@ -1,7 +1,8 @@
 import { QueryClientProvider } from '@tanstack/react-query'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import type { CoinMarket } from './api/types'
 import App from './App'
 import { useMarkets } from './hooks/useMarkets'
 import { createQueryClient } from './queryClient'
@@ -10,6 +11,33 @@ import { RateLimitError } from './utils/error/errors'
 vi.mock('./hooks/useMarkets', () => ({
   useMarkets: vi.fn(),
 }))
+
+vi.mock('./components/detail/DetailDrawer', () => ({
+  DetailDrawer: function MockDetailDrawer({
+    coinId,
+  }: {
+    coinId: string
+    onClose: () => void
+  }) {
+    return (
+      <div role="dialog" aria-label="Asset details">
+        <span data-testid="drawer-coin-id">{coinId}</span>
+      </div>
+    )
+  },
+}))
+
+const BITCOIN_ROW: CoinMarket = {
+  id: 'bitcoin',
+  symbol: 'btc',
+  name: 'Bitcoin',
+  image: 'https://example.com/btc.png',
+  current_price: 100_000,
+  market_cap: 2e12,
+  market_cap_rank: 1,
+  price_change_percentage_24h: 1.2,
+  sparkline_in_7d: { price: [1, 2, 3] },
+}
 
 function renderApp() {
   const client = createQueryClient()
@@ -21,6 +49,10 @@ function renderApp() {
 }
 
 describe('App', () => {
+  afterEach(() => {
+    window.history.pushState(null, '', '/')
+  })
+
   beforeEach(() => {
     vi.mocked(useMarkets).mockReturnValue({
       isError: false,
@@ -80,6 +112,37 @@ describe('App', () => {
     expect(screen.getByText('Server exploded')).toBeInTheDocument()
     await user.click(screen.getByRole('button', { name: /^retry$/i }))
     expect(refetch).toHaveBeenCalledTimes(1)
+  })
+
+  it('mounts drawer when ?coin= matches a loaded market (FR-4.7)', () => {
+    window.history.pushState(null, '', '/?coin=bitcoin')
+    vi.mocked(useMarkets).mockReturnValue({
+      isError: false,
+      error: null,
+      isPending: false,
+      data: [BITCOIN_ROW],
+      refetch: vi.fn(),
+    } as unknown as ReturnType<typeof useMarkets>)
+
+    renderApp()
+
+    expect(screen.getByRole('dialog')).toBeInTheDocument()
+    expect(screen.getByTestId('drawer-coin-id')).toHaveTextContent('bitcoin')
+  })
+
+  it('does not mount drawer when ?coin= is not in the current market list', () => {
+    window.history.pushState(null, '', '/?coin=dogecoin')
+    vi.mocked(useMarkets).mockReturnValue({
+      isError: false,
+      error: null,
+      isPending: false,
+      data: [BITCOIN_ROW],
+      refetch: vi.fn(),
+    } as unknown as ReturnType<typeof useMarkets>)
+
+    renderApp()
+
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
   })
 
   it('shows skeleton table while markets query is pending', () => {

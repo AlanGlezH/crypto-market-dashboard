@@ -1,79 +1,48 @@
 # Crypto Market Dashboard
 
-React + TypeScript + Vite. **Project documentation:** [REQUIREMENTS.md](./REQUIREMENTS.md) (acceptance criteria) · [DESIGN.md](./DESIGN.md) (architecture) · [PLAN.md](./PLAN.md) (implementation steps). **UI mockups:** [docs/design/](./docs/design/) (`dashboard.png`, `drawer.png`).
+Top-20 crypto markets by USD market cap: sortable table, search, and a detail drawer (summary, 7-day chart, description) backed by the [CoinGecko](https://www.coingecko.com/) public API.
 
----
+**Specs:** [REQUIREMENTS.md](./REQUIREMENTS.md) · **Architecture:** [DESIGN.md](./DESIGN.md) · **Build plan:** [PLAN.md](./PLAN.md) · **Code style:** [CODING_STANDARDS.md](./CODING_STANDARDS.md) · **UI reference:** [docs/design/](./docs/design/)
 
-## Vite template
+## Prerequisites
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+- **Node.js** 20+ (or current LTS)
 
-Currently, two official plugins are available:
+## Setup
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
-
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm install
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Scripts
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+| Command | Purpose |
+|--------|---------|
+| `npm run dev` | Dev server (Vite) |
+| `npm run build` | Production build (`tsc` + Vite) |
+| `npm run preview` | Preview production build locally |
+| `npm test` | Run Vitest once (CI / pre-commit) |
+| `npm run test:watch` | Vitest watch mode |
+| `npm run lint` | ESLint |
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+Git **pre-commit** (Husky) runs **lint-staged** (ESLint on staged TS/TSX), **`npm test`**, and **`npm run build`**.
+
+## API note
+
+CoinGecko applies **rate limits** (e.g. HTTP 429). The app surfaces a dedicated message and **Retry** for the markets list; detail/chart errors show inline retry where applicable.
+
+## Technical choices (short)
+
+- **React 19** + **TypeScript** + **Vite** for a fast, typed UI.
+- **TanStack Query** for server state, caching, and retries (rate-limit aware per [DESIGN.md](./DESIGN.md)).
+- **Tailwind CSS v4** for layout and styling; **Recharts** for the sparkline and 7-day price chart.
+- **Vitest** and **Testing Library** for behavior-focused tests (requirements and regressions, not implementation trivia).
+- **Folder layout** stays **by-type** (`components/table`, `hooks`, `utils`, …) per [DESIGN.md](./DESIGN.md) §2 and **NFR-DES-3**; a **by-feature** split is optional later if the tree grows painful.
+
+## Verification
+
+Cross-check acceptance criteria in [REQUIREMENTS.md](./REQUIREMENTS.md); automated tests cover the main flows (markets load, errors + retry, sort, search empty state, drawer from URL, a11y-oriented drawer tests, description toggle, etc.). Run **`npm test`** before merge.
+
+## AI usage
+
+AI assistants (e.g. Cursor) were used for implementation speed, refactors, tests, and tooling (ESLint, Husky, docs). Human review and project docs ([REQUIREMENTS.md](./REQUIREMENTS.md), [DESIGN.md](./DESIGN.md), [CODING_STANDARDS.md](./CODING_STANDARDS.md)) set scope and conventions; automated checks (`npm test`, `npm run lint`, `npm run build`) validate changes before commit.

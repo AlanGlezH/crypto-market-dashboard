@@ -23,7 +23,7 @@ const SPARKLINE_H = 40
 function Placeholder() {
   return (
     <span
-      className="inline-flex shrink-0 items-center justify-end text-xs tabular-nums text-slate-400"
+      className="inline-flex shrink-0 items-center justify-end text-xs tabular-nums text-slate-500"
       style={{ width: SPARKLINE_W, height: SPARKLINE_H }}
       aria-hidden="true"
     >

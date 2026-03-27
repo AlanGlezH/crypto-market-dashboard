@@ -43,7 +43,7 @@ export function SortHeader({
       >
         <span>{label}</span>
         {active ? (
-          <span className="text-[0.65rem] text-slate-400" aria-hidden="true">
+          <span className="text-[0.65rem] text-slate-500" aria-hidden="true">
             {direction === 'asc' ? '▲' : '▼'}
           </span>
         ) : null}
