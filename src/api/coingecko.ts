@@ -3,16 +3,6 @@ import type { CoinDetail, CoinMarket, MarketChart } from './types'
 
 export const COINGECKO_API_V3_URL = 'https://api.coingecko.com/api/v3'
 
-/**
- * In Vite dev browser, use same-origin proxy so the browser receives real HTTP
- * statuses (CoinGecko 429s are CORS-opaque cross-origin). Vitest sets
- * `MODE === 'test'`, so tests keep using the full URL for assertion.
- */
-const FETCH_BASE =
-  import.meta.env.DEV && import.meta.env.MODE !== 'test'
-    ? '/coingecko-api'
-    : COINGECKO_API_V3_URL
-
 const MARKETS_SEARCH = new URLSearchParams({
   vs_currency: 'usd',
   order: 'market_cap_desc',
@@ -34,12 +24,17 @@ const MARKET_CHART_SEARCH = new URLSearchParams({
 })
 
 /**
- * GET JSON from CoinGecko v3. Throws {@link RateLimitError} on HTTP 429,
- * {@link ApiError} on other non-OK responses. If `fetch` itself rejects
- * (network, CORS, etc.), that error propagates unchanged.
+ * GET JSON from CoinGecko v3. Throws {@link RateLimitError} on HTTP 429 or
+ * when `fetch` rejects (CORS-opaque 429, network failure). Throws
+ * {@link ApiError} on other non-OK responses.
  */
 export async function coingeckoApiFetch<T>(path: string): Promise<T> {
-  const res = await fetch(`${FETCH_BASE}${path}`)
+  let res: Response
+  try {
+    res = await fetch(`${COINGECKO_API_V3_URL}${path}`)
+  } catch {
+    throw new RateLimitError()
+  }
 
   if (res.status === 429) {
     throw new RateLimitError()

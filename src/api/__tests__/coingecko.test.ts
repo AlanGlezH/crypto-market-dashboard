@@ -35,11 +35,12 @@ describe('coingeckoApiFetch', () => {
     )
   })
 
-  it('propagates when fetch rejects before a response', async () => {
-    const err = new TypeError('Failed to fetch')
-    vi.mocked(fetch).mockRejectedValue(err)
+  it('throws RateLimitError when fetch rejects (CORS-opaque 429)', async () => {
+    vi.mocked(fetch).mockRejectedValue(new TypeError('Failed to fetch'))
 
-    await expect(coingeckoApiFetch('/coins/list')).rejects.toBe(err)
+    await expect(coingeckoApiFetch('/coins/list')).rejects.toBeInstanceOf(
+      RateLimitError,
+    )
   })
 
   it('throws ApiError on 500', async () => {
