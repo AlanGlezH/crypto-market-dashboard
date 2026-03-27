@@ -1,3 +1,4 @@
+import { DetailDrawer } from './components/detail/DetailDrawer'
 import { MarketTable } from './components/table/MarketTable'
 import { SkeletonTable } from './components/table/SkeletonTable'
 import { ErrorBanner } from './components/ui/ErrorBanner'
@@ -44,6 +45,14 @@ function App() {
           />
         )}
       </main>
+      {selectedCoinId ? (
+        <DetailDrawer
+          coinId={selectedCoinId}
+          onClose={() => {
+            setCoinId(null)
+          }}
+        />
+      ) : null}
     </div>
   )
 }
