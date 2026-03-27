@@ -4,13 +4,21 @@ import userEvent from '@testing-library/user-event'
 import type { ReactElement } from 'react'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import * as coingecko from '../../api/coingecko'
-import type { CoinDetail } from '../../api/types'
+import type { CoinDetail, MarketChart } from '../../api/types'
 import { createQueryClient } from '../../queryClient'
 import { DetailDrawer } from './DetailDrawer'
 
 vi.mock('../../api/coingecko', () => ({
   fetchCoinDetail: vi.fn(),
+  fetchMarketChart: vi.fn(),
 }))
+
+const SAMPLE_CHART: MarketChart = {
+  prices: Array.from({ length: 8 }, (_, i) => {
+    const ms = 1_700_000_000_000 + i * 86_400_000
+    return [ms, 100 + i * 2] as [number, number]
+  }),
+}
 
 const FULL_DETAIL: CoinDetail = {
   id: 'bitcoin',
@@ -36,6 +44,8 @@ function renderWithQuery(ui: ReactElement) {
 describe('DetailDrawer', () => {
   beforeEach(() => {
     vi.mocked(coingecko.fetchCoinDetail).mockReset()
+    vi.mocked(coingecko.fetchMarketChart).mockReset()
+    vi.mocked(coingecko.fetchMarketChart).mockResolvedValue(SAMPLE_CHART)
   })
 
   it('renders dialog with close control when mounted', async () => {
@@ -66,6 +76,10 @@ describe('DetailDrawer', () => {
     expect(screen.getByText('$50,000.00')).toBeInTheDocument()
     expect(screen.getByText('$69,000.00')).toBeInTheDocument()
     expect(screen.getByText('$67.81')).toBeInTheDocument()
+    await waitFor(() => {
+      expect(document.querySelector('svg')).toBeInTheDocument()
+    })
+    expect(screen.getByText('7-day price (USD)')).toBeInTheDocument()
   })
 
   it('shows skeleton while detail is loading', () => {
