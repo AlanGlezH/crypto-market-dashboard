@@ -37,7 +37,7 @@ describe('MarketTable', () => {
 
     const table = screen.getByRole('table')
     expect(
-      within(table).getByRole('columnheader', { name: /^rank$/i }),
+      within(table).getByRole('columnheader', { name: /rank/i }),
     ).toBeInTheDocument()
     expect(
       within(table).getByRole('columnheader', { name: /24h change/i }),
@@ -77,12 +77,12 @@ describe('MarketTable', () => {
     const tbody = table.querySelector('tbody') as HTMLElement
     const firstRow = () => within(tbody).getAllByRole('row')[0]
 
-    const coinHeader = within(table).getByRole('columnheader', { name: /^coin$/i })
-    const coinBtn = within(coinHeader).getByRole('button', { name: /^coin$/i })
+    const coinHeader = within(table).getByRole('columnheader', { name: /coin/i })
+    const coinBtn = within(coinHeader).getByRole('button', { name: /sort by coin/i })
 
     expect(firstRow()).toHaveTextContent('Bitcoin')
     expect(
-      within(table).getByRole('columnheader', { name: /^market cap$/i }),
+      within(table).getByRole('columnheader', { name: /market cap/i }),
     ).toHaveAttribute('aria-sort', 'descending')
 
     await user.click(coinBtn)
@@ -100,9 +100,9 @@ describe('MarketTable', () => {
 
     const table = screen.getByRole('table')
     const rankHeader = within(table).getByRole('columnheader', {
-      name: /^rank$/i,
+      name: /rank/i,
     })
-    const rankBtn = within(rankHeader).getByRole('button', { name: /^rank$/i })
+    const rankBtn = within(rankHeader).getByRole('button', { name: /sort by rank/i })
     rankBtn.focus()
     await user.keyboard(' ')
     expect(rankHeader).toHaveAttribute('aria-sort', 'ascending')

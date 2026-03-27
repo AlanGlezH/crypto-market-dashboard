@@ -35,6 +35,11 @@ export function SortHeader({
       <button
         type="button"
         onClick={handleSortClick}
+        aria-label={
+          active
+            ? `${label}, sorted ${direction === 'asc' ? 'ascending' : 'descending'}`
+            : `Sort by ${label}`
+        }
         className={`group flex w-full min-w-0 cursor-pointer items-center gap-1 px-4 py-3 ${HEADER_TEXT} hover:bg-slate-200/80 hover:text-slate-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-400 ${align === 'end' ? 'justify-end' : 'justify-start'}`}
       >
         <span>{label}</span>
