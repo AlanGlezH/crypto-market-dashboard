@@ -1,9 +1,10 @@
+import { SkeletonTable } from './components/table/SkeletonTable'
 import { ErrorBanner } from './components/ui/ErrorBanner'
 import { getMarketsErrorDisplay } from './constants/marketsErrors'
 import { useMarkets } from './hooks/useMarkets'
 
 function App() {
-  const { isError, error, refetch } = useMarkets()
+  const { isError, error, refetch, isPending } = useMarkets()
 
   const errorDisplay = isError ? getMarketsErrorDisplay(error) : null
 
@@ -26,6 +27,8 @@ function App() {
               void refetch()
             }}
           />
+        ) : true ? (
+          <SkeletonTable />
         ) : (
           <p className="text-slate-600">Markets table will load here.</p>
         )}

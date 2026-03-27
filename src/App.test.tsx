@@ -25,6 +25,7 @@ describe('App', () => {
     vi.mocked(useMarkets).mockReturnValue({
       isError: false,
       error: null,
+      isPending: false,
       refetch: vi.fn(),
     } as unknown as ReturnType<typeof useMarkets>)
   })
@@ -44,6 +45,7 @@ describe('App', () => {
     vi.mocked(useMarkets).mockReturnValue({
       isError: true,
       error: new RateLimitError(),
+      isPending: false,
       refetch,
     } as unknown as ReturnType<typeof useMarkets>)
 
@@ -64,6 +66,7 @@ describe('App', () => {
     vi.mocked(useMarkets).mockReturnValue({
       isError: true,
       error: new Error('Server exploded'),
+      isPending: false,
       refetch,
     } as unknown as ReturnType<typeof useMarkets>)
 
@@ -72,5 +75,22 @@ describe('App', () => {
     expect(screen.getByText('Server exploded')).toBeInTheDocument()
     await user.click(screen.getByRole('button', { name: /^retry$/i }))
     expect(refetch).toHaveBeenCalledTimes(1)
+  })
+
+  it('shows skeleton table while markets query is pending', () => {
+    vi.mocked(useMarkets).mockReturnValue({
+      isError: false,
+      error: null,
+      isPending: true,
+      refetch: vi.fn(),
+    } as unknown as ReturnType<typeof useMarkets>)
+
+    const { container } = renderApp()
+
+    expect(container.querySelector('[aria-busy="true"]')).toBeTruthy()
+    expect(screen.getByRole('table')).toBeInTheDocument()
+    expect(
+      screen.queryByText(/markets table will load here/i),
+    ).not.toBeInTheDocument()
   })
 })
