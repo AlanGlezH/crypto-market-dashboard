@@ -217,7 +217,7 @@ Use this file **step by step**. After each step, **pause** so you can **review**
 **Do**
 
 - Wrap app in `QueryClientProvider` (DESIGN §4).
-- Set `staleTime` (~55s) and `retry` that returns **false** for `RateLimitError`, else limited retries.
+- Set `staleTime` (~55s) and `retry` that returns **false** for `RateLimitError`, else limited retries. Keeps focus/remount refetches down; markets still use `refetchInterval: 60_000` in Step 09.
 
 **Tests**
 

@@ -107,7 +107,7 @@ export interface MarketChart {
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      staleTime: 55_000,       // treat data fresh for 55s (auto-refresh fires at 60s)
+      staleTime: 55_000,       // fresh ~55s: fewer refetches on focus/remount; markets still poll every 60s
       retry: (count, err) =>   // don't retry 429s
         err instanceof RateLimitError ? false : count < 2,
     },
@@ -152,7 +152,7 @@ export function useCoinDetail(id: string | null) {
 
 > CoinGecko free tier: ~30 req/min. With auto-refresh + detail fetches, budget carefully.
 
-- **Parallel detail requests:** Opening the drawer fires two requests (coin detail + market chart). `staleTime` on both queries limits repeat traffic. If 429s show up in practice, optionally set the chart query’s `enabled` to wait until detail has succeeded—nice-to-have, not required for the spec.
+- **Parallel detail requests:** Opening the drawer fires two requests (coin detail + market chart). Global `staleTime` (~55s) and per-query `staleTime` on detail (and chart, if you add one) limit repeat traffic. If 429s show up in practice, optionally set the chart query’s `enabled` to wait until detail has succeeded—nice-to-have, not required for the spec.
 - **Loading:** skeleton components that mirror the real layout (table rows with pulse animation, chart placeholder)
 - **Rate limit (429):** custom `RateLimitError` class thrown from `coingecko.ts`. `ErrorBanner` shows user-friendly message + retry button. React Query `retry: false` on 429.
 - **Generic error:** `ErrorBanner` with retry. React Query retries 2× before surfacing.
