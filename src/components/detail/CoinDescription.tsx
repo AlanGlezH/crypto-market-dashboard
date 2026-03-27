@@ -58,7 +58,7 @@ function CoinDescriptionBody({
           {isExpandable ? (
             <button
               type="button"
-              className="mt-3 text-sm font-semibold text-blue-600 underline decoration-blue-600/40 underline-offset-[3px] hover:text-blue-700 hover:decoration-blue-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500"
+              className="mt-3 cursor-pointer text-sm font-semibold text-blue-600 underline decoration-blue-600/40 underline-offset-[3px] hover:text-blue-700 hover:decoration-blue-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500"
               onClick={handleToggleExpanded}
               aria-expanded={expanded}
             >

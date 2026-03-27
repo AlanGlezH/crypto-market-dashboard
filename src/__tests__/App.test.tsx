@@ -66,7 +66,7 @@ describe('App', () => {
   it('renders header and main; empty markets shows no-data state (not a bare table)', () => {
     renderApp()
     expect(
-      screen.getByRole('heading', { level: 1, name: /clara market dashboard/i }),
+      screen.getByRole('heading', { level: 1, name: /clara crypto market dashboard/i }),
     ).toBeInTheDocument()
     expect(screen.getByRole('main')).toBeInTheDocument()
     expect(screen.getByText(/top 20 by market cap/i)).toBeInTheDocument()

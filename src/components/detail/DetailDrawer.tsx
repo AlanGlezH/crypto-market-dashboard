@@ -84,7 +84,7 @@ function DrawerHeaderAsset({
         ref={closeRef}
         type="button"
         onClick={onClose}
-        className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-slate-600 transition-colors hover:bg-slate-100 hover:text-slate-900 focus:outline focus:outline-2 focus:outline-offset-2 focus:outline-slate-400"
+        className="flex h-10 w-10 shrink-0 cursor-pointer items-center justify-center rounded-full text-slate-600 transition-colors hover:bg-slate-100 hover:text-slate-900 focus:outline focus:outline-2 focus:outline-offset-2 focus:outline-slate-400"
         aria-label="Close"
       >
         <DrawerCloseIcon />
@@ -114,7 +114,7 @@ function DrawerHeaderPlaceholder({
         ref={closeRef}
         type="button"
         onClick={onClose}
-        className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-slate-600 transition-colors hover:bg-slate-100 hover:text-slate-900 focus:outline focus:outline-2 focus:outline-offset-2 focus:outline-slate-400"
+        className="flex h-10 w-10 shrink-0 cursor-pointer items-center justify-center rounded-full text-slate-600 transition-colors hover:bg-slate-100 hover:text-slate-900 focus:outline focus:outline-2 focus:outline-offset-2 focus:outline-slate-400"
         aria-label="Close"
       >
         <DrawerCloseIcon />
@@ -208,7 +208,7 @@ export function DetailDrawer({ coinId, onClose, children }: DetailDrawerProps) {
       <button
         type="button"
         tabIndex={-1}
-        className="absolute inset-0 bg-slate-900/45 backdrop-blur-[2px] transition-opacity"
+        className="absolute inset-0 cursor-pointer bg-slate-900/45 backdrop-blur-[2px] transition-opacity"
         aria-label="Close drawer"
         onClick={onClose}
       />
