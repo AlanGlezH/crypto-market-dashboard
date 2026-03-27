@@ -263,7 +263,7 @@ Use this file **step by step**. After each step, **pause** so you can **review**
 | | |
 |---|---|
 | **FR** | FR-2.3, FR-2.5 |
-| **Goal** | `formatUSD`, `formatMarketCap`, `formatPct` (or equivalent). |
+| **Goal** | `formatUSD`, `formatMarketCap`, `formatPercentage` (or equivalent). |
 
 **Do**
 
@@ -272,7 +272,7 @@ Use this file **step by step**. After each step, **pause** so you can **review**
 
 **Tests**
 
-- **Unit tests** for `formatUSD`, `formatMarketCap`, `formatPct`: known inputs → expected strings; edge cases (0, large values, null/undefined if you handle them).
+- **Unit tests** for `formatUSD`, `formatMarketCap`, `formatPercentage`: known inputs → expected strings; edge cases (0, large values, null/undefined if you handle them).
 
 **Review**
 

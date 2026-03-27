@@ -46,7 +46,7 @@ src/
 │   ├── useCoinDetail.ts       # useQuery wrapper for /coins/{id}
 │   └── useMarketChart.ts      # useQuery wrapper for /coins/{id}/market_chart
 ├── utils/
-│   ├── format.ts              # formatUSD, formatMarketCap, formatPct
+│   ├── format.ts              # formatUSD, formatMarketCap, formatPercentage
 │   └── sort.ts                # generic column sort util
 └── App.tsx                    # QueryClientProvider, layout, URL param read
 ```
