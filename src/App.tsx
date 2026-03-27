@@ -1,10 +1,11 @@
+import { MarketTable } from './components/table/MarketTable'
 import { SkeletonTable } from './components/table/SkeletonTable'
 import { ErrorBanner } from './components/ui/ErrorBanner'
 import { getMarketsErrorDisplay } from './constants/marketsErrors'
 import { useMarkets } from './hooks/useMarkets'
 
 function App() {
-  const { isError, error, refetch, isPending } = useMarkets()
+  const { data, isError, error, refetch, isPending } = useMarkets()
 
   const errorDisplay = isError ? getMarketsErrorDisplay(error) : null
 
@@ -27,10 +28,10 @@ function App() {
               void refetch()
             }}
           />
-        ) : true ? (
+        ) : isPending ? (
           <SkeletonTable />
         ) : (
-          <p className="text-slate-600">Markets table will load here.</p>
+          <MarketTable coins={data ?? []} />
         )}
       </main>
     </div>

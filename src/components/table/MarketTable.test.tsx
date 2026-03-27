@@ -1,0 +1,64 @@
+import { render, screen, within } from '@testing-library/react'
+import { describe, expect, it } from 'vitest'
+import type { CoinMarket } from '../../api/types'
+import { MarketTable } from './MarketTable'
+
+const FIXTURE_COINS: CoinMarket[] = [
+  {
+    id: 'bitcoin',
+    symbol: 'btc',
+    name: 'Bitcoin',
+    image: 'https://example.com/btc.png',
+    current_price: 100_000,
+    market_cap: 2_000_000_000_000,
+    market_cap_rank: 1,
+    price_change_percentage_24h: 2.5,
+    sparkline_in_7d: { price: [1, 2, 3] },
+  },
+  {
+    id: 'ethereum',
+    symbol: 'eth',
+    name: 'Ethereum',
+    image: 'https://example.com/eth.png',
+    current_price: 3_500.25,
+    market_cap: 400_000_000_000,
+    market_cap_rank: 2,
+    price_change_percentage_24h: -0.82,
+    sparkline_in_7d: { price: [3, 2, 1] },
+  },
+]
+
+describe('MarketTable', () => {
+  it('renders column headers and row data with formatting', () => {
+    render(<MarketTable coins={FIXTURE_COINS} />)
+
+    const table = screen.getByRole('table')
+    expect(
+      within(table).getByRole('columnheader', { name: /^rank$/i }),
+    ).toBeInTheDocument()
+    expect(
+      within(table).getByRole('columnheader', { name: /24h change/i }),
+    ).toBeInTheDocument()
+
+    expect(screen.getByText('Bitcoin')).toBeInTheDocument()
+    expect(screen.getByText('Ethereum')).toBeInTheDocument()
+    expect(screen.getByText('BTC')).toBeInTheDocument()
+    expect(screen.getByText('ETH')).toBeInTheDocument()
+
+    expect(screen.getByText('$100,000.00')).toBeInTheDocument()
+    expect(screen.getByText('$2.00T')).toBeInTheDocument()
+  })
+
+  it('shows non-color 24h cue: arrows (aria-hidden) plus percentage', () => {
+    render(<MarketTable coins={FIXTURE_COINS} />)
+
+    const btcRow = screen.getByText('Bitcoin').closest('tr') as HTMLElement
+    const ethRow = screen.getByText('Ethereum').closest('tr') as HTMLElement
+
+    expect(btcRow.querySelector('[aria-hidden="true"]')).toHaveTextContent('▲')
+    expect(btcRow).toHaveTextContent('+2.50%')
+
+    expect(ethRow.querySelector('[aria-hidden="true"]')).toHaveTextContent('▼')
+    expect(ethRow).toHaveTextContent('-0.82%')
+  })
+})

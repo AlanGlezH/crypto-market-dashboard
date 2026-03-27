@@ -26,17 +26,19 @@ describe('App', () => {
       isError: false,
       error: null,
       isPending: false,
+      data: [],
       refetch: vi.fn(),
     } as unknown as ReturnType<typeof useMarkets>)
   })
 
-  it('renders header and main shell', () => {
+  it('renders header, main, and markets table shell when loaded', () => {
     renderApp()
     expect(
       screen.getByRole('heading', { level: 1, name: /clara market dashboard/i }),
     ).toBeInTheDocument()
     expect(screen.getByRole('main')).toBeInTheDocument()
     expect(screen.getByText(/top 20 by market cap/i)).toBeInTheDocument()
+    expect(screen.getByRole('table')).toBeInTheDocument()
   })
 
   it('shows rate-limit copy and Retry when markets query hits RateLimitError', async () => {
@@ -46,6 +48,7 @@ describe('App', () => {
       isError: true,
       error: new RateLimitError(),
       isPending: false,
+      data: undefined,
       refetch,
     } as unknown as ReturnType<typeof useMarkets>)
 
@@ -67,6 +70,7 @@ describe('App', () => {
       isError: true,
       error: new Error('Server exploded'),
       isPending: false,
+      data: undefined,
       refetch,
     } as unknown as ReturnType<typeof useMarkets>)
 
