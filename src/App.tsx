@@ -1,4 +1,12 @@
+import { ErrorBanner } from './components/ui/ErrorBanner'
+import { getMarketsErrorDisplay } from './constants/marketsErrors'
+import { useMarkets } from './hooks/useMarkets'
+
 function App() {
+  const { isError, error, refetch } = useMarkets()
+
+  const errorDisplay = isError ? getMarketsErrorDisplay(error) : null
+
   return (
     <div className="flex min-h-screen flex-col bg-slate-50 text-slate-900">
       <header className="border-b border-slate-200 bg-white px-6 py-4">
@@ -10,7 +18,17 @@ function App() {
         </p>
       </header>
       <main className="flex-1 p-6">
-        <p className="text-slate-600">Markets table will load here.</p>
+        {errorDisplay ? (
+          <ErrorBanner
+            message={errorDisplay.message}
+            variant={errorDisplay.variant}
+            onRetry={() => {
+              void refetch()
+            }}
+          />
+        ) : (
+          <p className="text-slate-600">Markets table will load here.</p>
+        )}
       </main>
     </div>
   )
