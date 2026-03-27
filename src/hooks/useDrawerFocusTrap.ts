@@ -1,6 +1,5 @@
 import { useEffect, type RefObject } from 'react'
 
-/** Matches interactive controls that participate in sequential focus navigation. */
 const TABBABLE_SELECTOR = [
   'a[href]',
   'button:not([disabled])',

@@ -34,12 +34,29 @@ const MARKET_TABLE_COLUMNS = [
   },
 ] as const
 
+type MarketTableRowProps = {
+  coin: CoinMarket
+  selected: boolean
+  onSelectCoin?: (id: string) => void
+}
+
+function MarketTableRow({ coin, selected, onSelectCoin }: MarketTableRowProps) {
+  function handleActivate() {
+    onSelectCoin?.(coin.id)
+  }
+
+  return (
+    <TableRow
+      coin={coin}
+      selected={selected}
+      onActivate={onSelectCoin ? handleActivate : undefined}
+    />
+  )
+}
 
 export type MarketTableProps = {
   coins: CoinMarket[]
-  /** Stub until detail drawer (Step 26); keyboard/mouse row activation. */
   onSelectCoin?: (id: string) => void
-  /** From `?coin=` — highlights the matching row (FR-4.7). */
   selectedCoinId?: string | null
 }
 
@@ -125,13 +142,11 @@ export function MarketTable({
             </thead>
             <tbody>
               {sortedCoins.map((coin) => (
-                <TableRow
+                <MarketTableRow
                   key={coin.id}
                   coin={coin}
                   selected={coin.id === selectedCoinId}
-                  onActivate={
-                    onSelectCoin ? () => onSelectCoin(coin.id) : undefined
-                  }
+                  onSelectCoin={onSelectCoin}
                 />
               ))}
             </tbody>

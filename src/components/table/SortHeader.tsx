@@ -21,11 +21,14 @@ export function SortHeader({
   onSort,
 }: SortHeaderProps) {
   const active = column === activeColumn
-  const ariaSort = active
-    ? direction === 'asc'
-      ? 'ascending'
-      : 'descending'
-    : 'none'
+  let ariaSort: 'ascending' | 'descending' | 'none' = 'none'
+  if (active) {
+    ariaSort = direction === 'asc' ? 'ascending' : 'descending'
+  }
+
+  function handleSortClick() {
+    onSort(column)
+  }
 
   return (
     <th
@@ -35,9 +38,7 @@ export function SortHeader({
     >
       <button
         type="button"
-        onClick={() => {
-          onSort(column)
-        }}
+        onClick={handleSortClick}
         className={`group -mx-1 -my-0.5 flex w-full min-w-0 items-center gap-1 rounded px-1 py-0.5 ${HEADER_TEXT} hover:bg-slate-200/80 hover:text-slate-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-400 ${align === 'end' ? 'justify-end' : 'justify-start'}`}
       >
         <span>{label}</span>

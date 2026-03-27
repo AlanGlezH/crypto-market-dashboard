@@ -1,4 +1,3 @@
-/** Query key for selected asset (FR-4.7). */
 export const COIN_QUERY_KEY = 'coin'
 
 export function getCoinIdFromSearch(search: string): string | null {

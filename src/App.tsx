@@ -1,3 +1,4 @@
+import type { CoinMarket } from './api/types'
 import { DetailDrawer } from './components/detail/DetailDrawer'
 import { MarketTable } from './components/table/MarketTable'
 import {
@@ -6,9 +7,50 @@ import {
 } from './utils/restoreMarketRowFocus'
 import { SkeletonTable } from './components/table/SkeletonTable'
 import { ErrorBanner } from './components/ui/ErrorBanner'
-import { getMarketsErrorDisplay } from './constants/marketsErrors'
+import {
+  getMarketsErrorDisplay,
+  type MarketsErrorDisplay,
+} from './constants/marketsErrors'
 import { useCoinSearchParam } from './hooks/useCoinSearchParam'
 import { useMarkets } from './hooks/useMarkets'
+
+type MarketContentProps = {
+  errorDisplay: MarketsErrorDisplay | null
+  isPending: boolean
+  coins: CoinMarket[]
+  selectedCoinId: string | null
+  onMarketsRetry: () => void
+  onSelectCoin: (id: string) => void
+}
+
+function MarketContent({
+  errorDisplay,
+  isPending,
+  coins,
+  selectedCoinId,
+  onMarketsRetry,
+  onSelectCoin,
+}: MarketContentProps) {
+  if (errorDisplay) {
+    return (
+      <ErrorBanner
+        message={errorDisplay.message}
+        variant={errorDisplay.variant}
+        onRetry={onMarketsRetry}
+      />
+    )
+  }
+  if (isPending) {
+    return <SkeletonTable />
+  }
+  return (
+    <MarketTable
+      coins={coins}
+      selectedCoinId={selectedCoinId}
+      onSelectCoin={onSelectCoin}
+    />
+  )
+}
 
 function App() {
   const { data, isError, error, refetch, isPending } = useMarkets()
@@ -19,6 +61,20 @@ function App() {
   /** URL `?coin=` may reference an id outside the current page; derive selection without mutating history. */
   const selectedCoinId =
     coinId && data?.some((c) => c.id === coinId) ? coinId : null
+
+  function handleMarketsRetry() {
+    refetch()
+  }
+
+  function handleSelectCoin(id: string) {
+    setCoinId(id)
+  }
+
+  function handleCloseDrawer() {
+    const row = captureSelectedMarketRow()
+    setCoinId(null)
+    restoreMarketRowFocus(row)
+  }
 
   return (
     <div className="flex min-h-screen flex-col bg-slate-50 text-slate-900">
@@ -31,32 +87,19 @@ function App() {
         </p>
       </header>
       <main className="flex-1 p-6" inert={selectedCoinId != null}>
-        {errorDisplay ? (
-          <ErrorBanner
-            message={errorDisplay.message}
-            variant={errorDisplay.variant}
-            onRetry={() => {
-              void refetch()
-            }}
-          />
-        ) : isPending ? (
-          <SkeletonTable />
-        ) : (
-          <MarketTable
-            coins={data ?? []}
-            selectedCoinId={selectedCoinId}
-            onSelectCoin={(id) => setCoinId(id)}
-          />
-        )}
+        <MarketContent
+          errorDisplay={errorDisplay}
+          isPending={isPending}
+          coins={data ?? []}
+          selectedCoinId={selectedCoinId}
+          onMarketsRetry={handleMarketsRetry}
+          onSelectCoin={handleSelectCoin}
+        />
       </main>
       {selectedCoinId ? (
         <DetailDrawer
           coinId={selectedCoinId}
-          onClose={() => {
-            const row = captureSelectedMarketRow()
-            setCoinId(null)
-            restoreMarketRowFocus(row)
-          }}
+          onClose={handleCloseDrawer}
         />
       ) : null}
     </div>

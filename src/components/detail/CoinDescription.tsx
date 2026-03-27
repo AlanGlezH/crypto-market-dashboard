@@ -5,9 +5,8 @@ import {
 } from '../../utils/coinDescription'
 
 export type CoinDescriptionProps = {
-  /** `description.en` from CoinGecko (plain text). */
   descriptionEn: string | undefined
-  /** Drives remount so “read more” state resets when the asset changes. */
+  /** Remount key: resets expanded “read more” when switching assets. */
   coinId: string
 }
 

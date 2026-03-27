@@ -17,7 +17,6 @@ function strokeFor24h(pct: number | null): string {
   return STROKE_NEUTRAL
 }
 
-/** Inline sparkline — large enough to read next to two-line coin cells (~name + symbol). */
 const SPARKLINE_W = 100
 const SPARKLINE_H = 40
 

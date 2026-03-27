@@ -1,4 +1,3 @@
-/** Loading placeholder aligned with drawer layout (no duplicate header hero). */
 export function SkeletonDetail() {
   return (
     <div

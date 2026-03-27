@@ -1,3 +1,5 @@
+import type { ChangeEvent } from 'react'
+
 export type SearchInputProps = {
   id: string
   label: string
@@ -13,6 +15,10 @@ export function SearchInput({
   onChange,
   placeholder = 'Search by name or symbol',
 }: SearchInputProps) {
+  function handleInputChange(e: ChangeEvent<HTMLInputElement>) {
+    onChange(e.target.value)
+  }
+
   return (
     <div className="flex flex-col gap-1">
       <label htmlFor={id} className="text-xs font-medium text-slate-600">
@@ -22,9 +28,7 @@ export function SearchInput({
         id={id}
         type="search"
         value={value}
-        onChange={(e) => {
-          onChange(e.target.value)
-        }}
+        onChange={handleInputChange}
         placeholder={placeholder}
         autoComplete="off"
         spellCheck={false}

@@ -1,4 +1,4 @@
-/** ~300 characters per FR-4.5 / PLAN Step 24. */
+/** Excerpt length (FR-4.5). */
 export const COIN_DESCRIPTION_EXCERPT_MAX = 300
 
 export type CoinDescriptionExcerpt = {
@@ -7,7 +7,6 @@ export type CoinDescriptionExcerpt = {
   isExpandable: boolean
 }
 
-/** Plain string; caller should pass normalized text. */
 export function buildDescriptionExcerpt(
   plain: string,
   max = COIN_DESCRIPTION_EXCERPT_MAX,
@@ -25,7 +24,6 @@ export function buildDescriptionExcerpt(
   return { excerpt, full, isExpandable: true }
 }
 
-/** `description.en` as plain text: `undefined` → `''`, else `trim()`. */
 export function normalizeDescriptionEn(raw: string | undefined): string {
   if (raw == null) {
     return ''

@@ -9,9 +9,7 @@ import { Sparkline } from './Sparkline'
 
 export type TableRowProps = {
   coin: CoinMarket
-  /** When set, row is focusable and activates with Enter/Space (and click). */
   onActivate?: () => void
-  /** Matches URL `?coin=` selection (FR-4.7). */
   selected?: boolean
 }
 

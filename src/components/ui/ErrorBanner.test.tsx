@@ -6,7 +6,7 @@ import { ErrorBanner } from './ErrorBanner'
 describe('ErrorBanner', () => {
   it('renders message and Retry', () => {
     render(
-      <ErrorBanner message="Something failed" onRetry={() => {}} />,
+      <ErrorBanner message="Something failed" onRetry={vi.fn()} />,
     )
     expect(screen.getByText('Something failed')).toBeInTheDocument()
     expect(

@@ -16,7 +16,6 @@ import { PriceChart } from './PriceChart'
 import { SkeletonDetail } from './SkeletonDetail'
 
 export type DetailDrawerProps = {
-  /** Mount only when open (e.g. URL `?coin=` that matches loaded markets). */
   coinId: string
   onClose: () => void
   children?: ReactNode
@@ -124,12 +123,68 @@ function DrawerHeaderPlaceholder({
   )
 }
 
-/** Mount from the parent only when a coin is selected — effects run for an open drawer. */
+type DrawerScrollBodyProps = {
+  isPending: boolean
+  isError: boolean
+  data: CoinDetail | undefined
+  coinId: string
+  onRetry: () => void
+  children?: ReactNode
+}
+
+function DrawerScrollBody({
+  isPending,
+  isError,
+  data,
+  coinId,
+  onRetry,
+  children,
+}: DrawerScrollBodyProps) {
+  if (isPending) {
+    return <SkeletonDetail />
+  }
+  if (isError) {
+    return (
+      <div
+        className="rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-900"
+        role="alert"
+      >
+        <p className="font-medium">Couldn’t load asset details.</p>
+        <button
+          type="button"
+          className="mt-3 rounded-lg bg-red-900 px-3 py-2 text-sm font-medium text-white hover:bg-red-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-700"
+          onClick={onRetry}
+        >
+          Retry
+        </button>
+      </div>
+    )
+  }
+  if (data) {
+    return (
+      <>
+        <CoinDetailSummary detail={data} />
+        <PriceChart coinId={coinId} />
+        <CoinDescription
+          coinId={coinId}
+          descriptionEn={data.description?.en}
+        />
+        {children}
+      </>
+    )
+  }
+  return null
+}
+
 export function DetailDrawer({ coinId, onClose, children }: DetailDrawerProps) {
   const titleId = useId()
   const closeRef = useRef<HTMLButtonElement>(null)
   const panelRef = useRef<HTMLDivElement>(null)
   const { data, isPending, isError, refetch } = useCoinDetail(coinId)
+
+  function handleRetryDetail() {
+    void refetch()
+  }
 
   useDrawerFocusTrap(panelRef)
 
@@ -179,35 +234,15 @@ export function DetailDrawer({ coinId, onClose, children }: DetailDrawerProps) {
           />
         )}
         <div className="min-h-0 flex-1 overflow-y-auto px-5 pb-8 pt-5">
-          {isPending ? (
-            <SkeletonDetail />
-          ) : isError ? (
-            <div
-              className="rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-900"
-              role="alert"
-            >
-              <p className="font-medium">Couldn’t load asset details.</p>
-              <button
-                type="button"
-                className="mt-3 rounded-lg bg-red-900 px-3 py-2 text-sm font-medium text-white hover:bg-red-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-700"
-                onClick={() => {
-                  void refetch()
-                }}
-              >
-                Retry
-              </button>
-            </div>
-          ) : data ? (
-            <>
-              <CoinDetailSummary detail={data} />
-              <PriceChart coinId={coinId} />
-              <CoinDescription
-                coinId={coinId}
-                descriptionEn={data.description?.en}
-              />
-              {children}
-            </>
-          ) : null}
+          <DrawerScrollBody
+            isPending={isPending}
+            isError={isError}
+            data={data}
+            coinId={coinId}
+            onRetry={handleRetryDetail}
+          >
+            {children}
+          </DrawerScrollBody>
         </div>
       </div>
     </div>

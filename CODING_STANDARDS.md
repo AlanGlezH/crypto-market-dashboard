@@ -13,6 +13,7 @@ These guidelines apply to all code in this repository. For product behavior and 
 
 - Rely on **clear names**, **types**, and **structure** so readers understand *what* the code does without scanning comments.
 - Use **early returns** and small helpers instead of deep nesting.
+- **Avoid nested ternary operators** (`a ? b : c ? d : e`). Prefer **`if` / `else`** and **well-named intermediate variables** so branching is easy to read and change.
 - Prefer **TypeScript types** to encode contracts; avoid `any` unless there is a documented exception.
 
 ## Comments and JSDoc
@@ -27,6 +28,7 @@ These guidelines apply to all code in this repository. For product behavior and 
 ## React and UI
 
 - Keep components **presentational vs logic** separated when it improves readability (hooks and small components over huge JSX blocks).
+- **Do not define `function renderX()` / helpers inside a component that only return JSX.** That pattern looks like a nameless inner component: it **recreates the function every render**, obscures **props and data flow**, and makes **`React.memo` / `useCallback` boundaries** harder to reason about. Prefer a **named child component in the same file** (or its own module) with an explicit **props type** and use `<Child ... />` from the parent. Hooks stay in the parent (or in the child if that subtree owns the state). **Exception:** trivial **non-JSX** helpers (formatting, small pure logic) or one-liners that are **not** a distinct UI subtree—those need not become components.
 - **No inline handler lambdas in JSX** (e.g. `onClick={() => setX(1)}`). Define a **named function** in the component (or module) and pass `onClick={handleClick}`. Use **`useCallback`** only when a stable reference is required (e.g. memoized children, effect dependencies).
 - Match **existing patterns** in the codebase for hooks, data fetching, and styling unless a change is part of the task.
 - For **performance** (async waterfalls, bundle size, re-renders, etc.), treat [Vercel’s React Best Practices](https://vercel.com/blog/introducing-react-best-practices) and the [`react-best-practices` skill](https://github.com/vercel-labs/agent-skills/tree/main/skills/react-best-practices) as supplementary reference—not a replacement for this document.

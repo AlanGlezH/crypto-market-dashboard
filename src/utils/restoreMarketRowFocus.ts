@@ -1,7 +1,4 @@
-/**
- * Capture the selected market row before clearing `?coin=` so focus can return after close
- * (PLAN Step 25 / FR-4.6).
- */
+/** Capture the focused row before clearing `?coin=` so focus can restore after drawer close (FR-4.6). */
 export function captureSelectedMarketRow(): HTMLElement | null {
   return document.querySelector<HTMLElement>(
     'tr[aria-current="true"][tabindex="0"]',

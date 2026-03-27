@@ -1,4 +1,5 @@
 import { useId, type ReactNode } from 'react'
+import type { TooltipPayload } from 'recharts/types/state/tooltipSlice'
 import {
   Area,
   CartesianGrid,
@@ -49,7 +50,7 @@ function xTickIndices(length: number): number[] {
   return [0, mid, length - 1]
 }
 
-const CHART_STROKE = '#2563eb' // blue-600 — drawer mock
+const CHART_STROKE = '#2563eb'
 /** Fixed size so layout and tests stay deterministic (jsdom). */
 const CHART_W = 340
 const CHART_H = 220
@@ -108,6 +109,31 @@ function ChartLinePlot({
   rows: ChartRow[]
   fillGradientId: string
 }) {
+  function formatXTick(idx: number) {
+    return formatAxisDate(rows[idx]?.ms ?? 0)
+  }
+
+  function formatYTick(v: number) {
+    return formatUSD(v)
+  }
+
+  function formatTooltipValues(value: unknown) {
+    return [tooltipValue(value), 'Price'] as [string, string]
+  }
+
+  function formatTooltipLabel(
+    _label: unknown,
+    payload: TooltipPayload,
+  ): ReactNode {
+    const row = payload[0]?.payload as { ms: number } | undefined
+    return row
+      ? new Intl.DateTimeFormat('en-US', {
+          dateStyle: 'medium',
+          timeStyle: 'short',
+        }).format(new Date(row.ms))
+      : ''
+  }
+
   return (
     <div
       className="mt-4 max-w-full overflow-x-auto rounded-lg bg-slate-50/50 px-1 py-2"
@@ -137,29 +163,21 @@ function ChartLinePlot({
           type="number"
           domain={['dataMin', 'dataMax']}
           ticks={xTickIndices(rows.length)}
-          tickFormatter={(idx: number) => formatAxisDate(rows[idx]?.ms ?? 0)}
+          tickFormatter={formatXTick}
           tick={{ fontSize: 11, fill: '#64748b' }}
           axisLine={{ stroke: '#e2e8f0' }}
         />
         <YAxis
           domain={['auto', 'auto']}
-          tickFormatter={(v: number) => formatUSD(v)}
+          tickFormatter={formatYTick}
           width={58}
           tick={{ fontSize: 11, fill: '#64748b' }}
           axisLine={false}
           tickLine={false}
         />
         <Tooltip
-          formatter={(value) => [tooltipValue(value), 'Price']}
-          labelFormatter={(_, payload) => {
-            const row = payload?.[0]?.payload as { ms: number } | undefined
-            return row
-              ? new Intl.DateTimeFormat('en-US', {
-                  dateStyle: 'medium',
-                  timeStyle: 'short',
-                }).format(new Date(row.ms))
-              : ''
-          }}
+          formatter={formatTooltipValues}
+          labelFormatter={formatTooltipLabel}
           contentStyle={{
             fontSize: 12,
             borderRadius: 8,
@@ -199,20 +217,40 @@ function priceChartBodyKey(
   return 'chart'
 }
 
+type PriceChartBodyProps = {
+  bodyKey: PriceChartBodyKey
+  rows: ChartRow[]
+  fillGradientId: string
+  onRetry: () => void
+}
+
+function PriceChartBody({
+  bodyKey,
+  rows,
+  fillGradientId,
+  onRetry,
+}: PriceChartBodyProps) {
+  if (bodyKey === 'loading') {
+    return <ChartLoadingSkeleton />
+  }
+  if (bodyKey === 'error') {
+    return <ChartErrorPanel onRetry={onRetry} />
+  }
+  if (bodyKey === 'empty') {
+    return <ChartEmptyMessage />
+  }
+  return <ChartLinePlot rows={rows} fillGradientId={fillGradientId} />
+}
+
 /** 7-day USD price series from CoinGecko `market_chart` (FR-4.4). */
 export function PriceChart({ coinId }: PriceChartProps) {
   const fillGradientId = useId().replace(/:/g, '')
   const { data, isPending, isError, refetch } = useMarketChart(coinId)
   const rows = toRows(data?.prices)
-  const key = priceChartBodyKey(isPending, isError, rows.length)
+  const bodyKey = priceChartBodyKey(isPending, isError, rows.length)
 
-  const renderBody: Record<PriceChartBodyKey, () => ReactNode> = {
-    loading: () => <ChartLoadingSkeleton />,
-    error: () => <ChartErrorPanel onRetry={() => void refetch()} />,
-    empty: () => <ChartEmptyMessage />,
-    chart: () => (
-      <ChartLinePlot rows={rows} fillGradientId={fillGradientId} />
-    ),
+  function handleChartRetry() {
+    void refetch()
   }
 
   return (
@@ -226,7 +264,12 @@ export function PriceChart({ coinId }: PriceChartProps) {
       >
         7-day price (USD)
       </h3>
-      {renderBody[key]()}
+      <PriceChartBody
+        bodyKey={bodyKey}
+        rows={rows}
+        fillGradientId={fillGradientId}
+        onRetry={handleChartRetry}
+      />
     </section>
   )
 }
