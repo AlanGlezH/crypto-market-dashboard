@@ -4,6 +4,7 @@ import {
   formatPercentage,
   formatUSD,
 } from '../../utils/format'
+import { Sparkline } from './Sparkline'
 
 export type TableRowProps = {
   coin: CoinMarket
@@ -71,8 +72,11 @@ export function TableRow({ coin }: TableRowProps) {
       <td className="px-4 py-3 text-right tabular-nums text-slate-800">
         {formatMarketCap(coin.market_cap)}
       </td>
-      <td className="px-4 py-3 text-right text-slate-400">
-        <span className="text-xs">…</span>
+      <td className="px-4 py-3 text-right align-middle">
+        <Sparkline
+          prices={coin.sparkline_in_7d?.price}
+          change24hPercent={coin.price_change_percentage_24h}
+        />
       </td>
     </tr>
   )

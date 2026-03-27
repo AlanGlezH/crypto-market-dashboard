@@ -47,6 +47,10 @@ describe('MarketTable', () => {
 
     expect(screen.getByText('$100,000.00')).toBeInTheDocument()
     expect(screen.getByText('$2.00T')).toBeInTheDocument()
+
+    expect(
+      within(table).getAllByRole('img', { name: '7-day price trend' }),
+    ).toHaveLength(2)
   })
 
   it('shows non-color 24h cue: arrows (aria-hidden) plus percentage', () => {

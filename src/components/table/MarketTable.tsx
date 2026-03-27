@@ -20,7 +20,7 @@ export type MarketTableProps = {
 export function MarketTable({ coins }: MarketTableProps) {
   return (
     <div className="overflow-x-auto rounded-lg border border-slate-200 bg-white shadow-sm">
-      <table className="w-full min-w-[720px] border-collapse text-left text-sm">
+      <table className="w-full min-w-[760px] border-collapse text-left text-sm">
         <thead>
           <tr className="border-b border-slate-200 bg-slate-50">
             {MARKET_TABLE_COLUMNS.map((col) => (

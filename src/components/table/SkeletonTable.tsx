@@ -16,7 +16,7 @@ export function SkeletonTable() {
       aria-label="Loading market data"
       className="overflow-x-auto rounded-lg border border-slate-200 bg-white shadow-sm"
     >
-      <table className="w-full min-w-[720px] border-collapse text-left text-sm">
+      <table className="w-full min-w-[760px] border-collapse text-left text-sm">
         <thead>
           <tr className="border-b border-slate-200 bg-slate-50">
             {COLUMN_LABELS.map((label) => (
@@ -37,17 +37,24 @@ export function SkeletonTable() {
               className="border-b border-slate-100 last:border-b-0"
             >
               {COLUMN_LABELS.map((label) => (
-                <td key={label} className="px-4 py-3">
+                <td
+                  key={label}
+                  className={`px-4 py-3 ${label === '7d trend' ? 'text-right' : ''}`}
+                >
                   <div
-                    className="h-4 max-w-full animate-pulse rounded bg-slate-200"
-                    style={{
-                      width:
-                        label === 'Coin'
-                          ? '70%'
-                          : label === '7d trend'
-                            ? '90%'
-                            : '55%',
-                    }}
+                    className={
+                      label === '7d trend'
+                        ? 'inline-block h-10 w-[100px] shrink-0 animate-pulse rounded bg-slate-200'
+                        : 'h-4 max-w-full animate-pulse rounded bg-slate-200'
+                    }
+                    style={
+                      label === '7d trend'
+                        ? undefined
+                        : {
+                            width:
+                              label === 'Coin' ? '70%' : '55%',
+                          }
+                    }
                   />
                 </td>
               ))}
