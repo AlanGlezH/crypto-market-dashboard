@@ -23,10 +23,10 @@ function Change24hCell({ pct }: { pct: number | null }) {
   let toneClass: string
   let arrow: string
   if (pct > 0) {
-    toneClass = 'text-emerald-600'
+    toneClass = 'text-emerald-700'
     arrow = '▲'
   } else if (pct < 0) {
-    toneClass = 'text-red-600'
+    toneClass = 'text-red-700'
     arrow = '▼'
   } else {
     toneClass = 'text-slate-600'
@@ -64,7 +64,7 @@ export function TableRow({ coin, onActivate, selected }: TableRowProps) {
         selected ? 'bg-slate-100/70' : ''
       } ${
         interactive
-          ? 'cursor-pointer hover:bg-slate-50/80 focus-visible:bg-slate-50/80 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-slate-400'
+          ? 'cursor-pointer hover:bg-slate-50/80 focus:bg-slate-50/80 focus:outline-2 focus:-outline-offset-2 focus:outline-slate-400'
           : ''
       }`}
       onClick={interactive ? onActivate : undefined}

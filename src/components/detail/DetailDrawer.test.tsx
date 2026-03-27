@@ -62,6 +62,24 @@ describe('DetailDrawer', () => {
     expect(screen.getByLabelText(/loading asset details/i)).toBeInTheDocument()
   })
 
+  it('exposes dialog title via aria-labelledby and moves focus to Close', async () => {
+    vi.mocked(coingecko.fetchCoinDetail).mockResolvedValue(FULL_DETAIL)
+    renderWithQuery(<DetailDrawer coinId="bitcoin" onClose={vi.fn()} />)
+
+    const dialog = screen.getByRole('dialog')
+    await waitFor(() => {
+      expect(screen.getByRole('heading', { name: /^bitcoin$/i })).toBeInTheDocument()
+    })
+    const title = screen.getByRole('heading', { name: /^bitcoin$/i })
+    expect(dialog.getAttribute('aria-labelledby')).toBe(title.id)
+
+    await waitFor(() => {
+      expect(
+        within(dialog).getByRole('button', { name: /^close$/i }),
+      ).toHaveFocus()
+    })
+  })
+
   it('shows coin summary when detail loads', async () => {
     vi.mocked(coingecko.fetchCoinDetail).mockResolvedValue(FULL_DETAIL)
     renderWithQuery(<DetailDrawer coinId="bitcoin" onClose={vi.fn()} />)

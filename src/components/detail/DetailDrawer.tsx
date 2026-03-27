@@ -1,12 +1,14 @@
 import {
   useEffect,
   useId,
+  useLayoutEffect,
   useRef,
   type ReactNode,
   type RefObject,
 } from 'react'
 import type { CoinDetail } from '../../api/types'
 import { useCoinDetail } from '../../hooks/useCoinDetail'
+import { useDrawerFocusTrap } from '../../hooks/useDrawerFocusTrap'
 import { getCoinImageSrc } from '../../utils/coinDetailDisplay'
 import { CoinDescription } from './CoinDescription'
 import { CoinDetailSummary } from './CoinDetailSummary'
@@ -51,7 +53,7 @@ function DrawerHeaderAsset({
   const symbol = detail.symbol?.toUpperCase() ?? '—'
 
   return (
-    <header className="flex shrink-0 items-center gap-3 border-b border-slate-200/90 px-5 py-4">
+    <div className="flex shrink-0 items-center gap-3 border-b border-slate-200/90 px-5 py-4">
       {imageSrc ? (
         <img
           src={imageSrc}
@@ -83,12 +85,12 @@ function DrawerHeaderAsset({
         ref={closeRef}
         type="button"
         onClick={onClose}
-        className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-slate-600 transition-colors hover:bg-slate-100 hover:text-slate-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-400"
+        className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-slate-600 transition-colors hover:bg-slate-100 hover:text-slate-900 focus:outline focus:outline-2 focus:outline-offset-2 focus:outline-slate-400"
         aria-label="Close"
       >
         <DrawerCloseIcon />
       </button>
-    </header>
+    </div>
   )
 }
 
@@ -102,7 +104,7 @@ function DrawerHeaderPlaceholder({
   onClose: () => void
 }) {
   return (
-    <header className="flex shrink-0 items-center justify-between gap-3 border-b border-slate-200/90 px-5 py-4">
+    <div className="flex shrink-0 items-center justify-between gap-3 border-b border-slate-200/90 px-5 py-4">
       <h2
         id={titleId}
         className="truncate text-lg font-bold tracking-tight text-[#1a1c21]"
@@ -113,12 +115,12 @@ function DrawerHeaderPlaceholder({
         ref={closeRef}
         type="button"
         onClick={onClose}
-        className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-slate-600 transition-colors hover:bg-slate-100 hover:text-slate-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-400"
+        className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-slate-600 transition-colors hover:bg-slate-100 hover:text-slate-900 focus:outline focus:outline-2 focus:outline-offset-2 focus:outline-slate-400"
         aria-label="Close"
       >
         <DrawerCloseIcon />
       </button>
-    </header>
+    </div>
   )
 }
 
@@ -126,15 +128,21 @@ function DrawerHeaderPlaceholder({
 export function DetailDrawer({ coinId, onClose, children }: DetailDrawerProps) {
   const titleId = useId()
   const closeRef = useRef<HTMLButtonElement>(null)
+  const panelRef = useRef<HTMLDivElement>(null)
   const { data, isPending, isError, refetch } = useCoinDetail(coinId)
 
-  useEffect(function focusCloseButton() {
-    closeRef.current?.focus()
-  }, [coinId])
+  useDrawerFocusTrap(panelRef)
+
+  useLayoutEffect(() => {
+    closeRef.current?.focus({ preventScroll: true })
+  }, [coinId, data, isPending, isError])
 
   useEffect(function subscribeEscapeToClose() {
     function onKeyDown(e: KeyboardEvent) {
-      if (e.key === 'Escape') onClose()
+      if (e.key === 'Escape') {
+        e.preventDefault()
+        onClose()
+      }
     }
     window.addEventListener('keydown', onKeyDown)
     return () => window.removeEventListener('keydown', onKeyDown)
@@ -144,11 +152,13 @@ export function DetailDrawer({ coinId, onClose, children }: DetailDrawerProps) {
     <div className="fixed inset-0 z-50 flex justify-end">
       <button
         type="button"
+        tabIndex={-1}
         className="absolute inset-0 bg-slate-900/45 backdrop-blur-[2px] transition-opacity"
         aria-label="Close drawer"
         onClick={onClose}
       />
       <div
+        ref={panelRef}
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}

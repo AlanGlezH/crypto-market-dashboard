@@ -1,5 +1,9 @@
 import { DetailDrawer } from './components/detail/DetailDrawer'
 import { MarketTable } from './components/table/MarketTable'
+import {
+  captureSelectedMarketRow,
+  restoreMarketRowFocus,
+} from './utils/restoreMarketRowFocus'
 import { SkeletonTable } from './components/table/SkeletonTable'
 import { ErrorBanner } from './components/ui/ErrorBanner'
 import { getMarketsErrorDisplay } from './constants/marketsErrors'
@@ -26,7 +30,7 @@ function App() {
           Top 20 by market cap (USD)
         </p>
       </header>
-      <main className="flex-1 p-6">
+      <main className="flex-1 p-6" inert={selectedCoinId != null}>
         {errorDisplay ? (
           <ErrorBanner
             message={errorDisplay.message}
@@ -49,7 +53,9 @@ function App() {
         <DetailDrawer
           coinId={selectedCoinId}
           onClose={() => {
+            const row = captureSelectedMarketRow()
             setCoinId(null)
+            restoreMarketRowFocus(row)
           }}
         />
       ) : null}

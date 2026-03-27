@@ -1,8 +1,8 @@
 import { Line, LineChart, XAxis, YAxis } from 'recharts'
 import { normalizeSparklinePrices } from '../../utils/sparklinePrices'
 
-const STROKE_POSITIVE = '#059669' // tailwind emerald-600
-const STROKE_NEGATIVE = '#dc2626' // tailwind red-600
+const STROKE_POSITIVE = '#047857' // emerald-700
+const STROKE_NEGATIVE = '#b91c1c' // red-700
 const STROKE_NEUTRAL = '#475569' // tailwind slate-600
 
 export type SparklineProps = {

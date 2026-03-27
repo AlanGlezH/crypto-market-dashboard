@@ -119,6 +119,7 @@ function ChartLinePlot({
         height={CHART_H}
         data={rows}
         margin={{ top: 12, right: 6, left: 2, bottom: 8 }}
+        accessibilityLayer={false}
       >
         <defs>
           <linearGradient id={fillGradientId} x1="0" y1="0" x2="0" y2="1">

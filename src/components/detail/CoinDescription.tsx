@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 import {
   buildDescriptionExcerpt,
   normalizeDescriptionEn,
@@ -7,7 +7,7 @@ import {
 export type CoinDescriptionProps = {
   /** `description.en` from CoinGecko (plain text). */
   descriptionEn: string | undefined
-  /** Reset expanded state when the asset changes. */
+  /** Drives remount so “read more” state resets when the asset changes. */
   coinId: string
 }
 
@@ -15,6 +15,15 @@ export function CoinDescription({
   descriptionEn,
   coinId,
 }: CoinDescriptionProps) {
+  return (
+    <CoinDescriptionBody key={coinId} descriptionEn={descriptionEn} />
+  )
+}
+
+function CoinDescriptionBody({
+  descriptionEn,
+}: Pick<CoinDescriptionProps, 'descriptionEn'>) {
+  const [expanded, setExpanded] = useState(false)
   const plain = useMemo(
     () => normalizeDescriptionEn(descriptionEn),
     [descriptionEn],
@@ -24,14 +33,10 @@ export function CoinDescription({
     [plain],
   )
   const hasDescription = plain.trim().length > 0
-  const [expanded, setExpanded] = useState(false)
 
-  useEffect(
-    function resetExpandedOnCoinChange() {
-      setExpanded(false)
-    },
-    [coinId],
-  )
+  function handleToggleExpanded() {
+    setExpanded((prev) => !prev)
+  }
 
   const displayText = expanded || !isExpandable ? full : excerpt
 
@@ -55,7 +60,7 @@ export function CoinDescription({
             <button
               type="button"
               className="mt-3 text-sm font-semibold text-blue-600 underline decoration-blue-600/40 underline-offset-[3px] hover:text-blue-700 hover:decoration-blue-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500"
-              onClick={() => setExpanded((e) => !e)}
+              onClick={handleToggleExpanded}
               aria-expanded={expanded}
             >
               {expanded ? 'Read less' : 'Read more'}

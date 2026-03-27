@@ -11,10 +11,10 @@ function Change24hInline({ pct }: { pct: number | null | undefined }) {
   let toneClass: string
   let arrow: string
   if (pct > 0) {
-    toneClass = 'text-emerald-600'
+    toneClass = 'text-emerald-700'
     arrow = '▲'
   } else if (pct < 0) {
-    toneClass = 'text-red-600'
+    toneClass = 'text-red-700'
     arrow = '▼'
   } else {
     toneClass = 'text-slate-600'
