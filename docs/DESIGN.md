@@ -2,7 +2,7 @@
 
 v1.0 · draft · generated from challenge specs
 
-**Visual mockups (guide only):** [dashboard.png](./docs/design/dashboard.png), [drawer.png](./docs/design/drawer.png). Non-authoritative; [REQUIREMENTS.md](./REQUIREMENTS.md) and this document prevail when there is a conflict.
+**Visual mockups (guide only):** [dashboard.png](./design/dashboard.png), [drawer.png](./design/drawer.png). Non-authoritative; [REQUIREMENTS.md](./REQUIREMENTS.md) and this document prevail when there is a conflict.
 
 ---
 

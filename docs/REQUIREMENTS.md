@@ -1,6 +1,6 @@
 # Functional requirements — Crypto Market Dashboard
 
-Implementation and self-review checklist. IDs are stable for traceability to the employer brief, [DESIGN.md](./DESIGN.md), and [PLAN.md](./PLAN.md) (implementation order). UI mockups: [docs/design/](./docs/design/).
+Implementation and self-review checklist. IDs are stable for traceability to the employer brief, [DESIGN.md](./DESIGN.md), and [PLAN.md](./PLAN.md) (implementation order). UI mockups: [design/](./design/).
 
 ---
 

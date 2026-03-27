@@ -2,7 +2,7 @@
 
 Use this file **step by step**. After each step, **pause** so you can **review** the changes and the step’s **Review** checklist; **you** **`git commit`** when satisfied, then move on. Sources of truth: [REQUIREMENTS.md](./REQUIREMENTS.md), [DESIGN.md](./DESIGN.md).
 
-**Visual reference (non-authoritative):** [dashboard.png](./docs/design/dashboard.png) and [drawer.png](./docs/design/drawer.png) are UI mockups (e.g. Stitch). Use them for **layout, typography, spacing, and component grouping** only. If anything in the images conflicts with [REQUIREMENTS.md](./REQUIREMENTS.md) or [DESIGN.md](./DESIGN.md), **follow REQUIREMENTS + DESIGN** and omit decorative or out-of-scope elements (extra footer actions, non-spec chrome, etc.).
+**Visual reference (non-authoritative):** [dashboard.png](./design/dashboard.png) and [drawer.png](./design/drawer.png) are UI mockups (e.g. Stitch). Use them for **layout, typography, spacing, and component grouping** only. If anything in the images conflicts with [REQUIREMENTS.md](./REQUIREMENTS.md) or [DESIGN.md](./DESIGN.md), **follow REQUIREMENTS + DESIGN** and omit decorative or out-of-scope elements (extra footer actions, non-spec chrome, etc.).
 
 **Workflow**
 
