@@ -12,7 +12,7 @@ v1.0 · draft · generated from challenge specs
 |---|---|---|
 | Build tool | Vite + React + TS | Fast DX, native ESM, no CRA bloat |
 | Data fetching | TanStack Query v5 | Required by spec; handles caching, background refresh, stale state |
-| Styling | Tailwind CSS v3 | Preferred by spec; utility-first, consistent spacing/color |
+| Styling | Tailwind CSS v4 | Preferred by spec; utility-first, consistent spacing/color (`@tailwindcss/vite`) |
 | Charts | Recharts | React-native, composable, good TS support |
 | Routing | URL params only | No page transitions needed; `?coin=bitcoin` for detail state |
 | HTTP client | native fetch | No extra dependency; wrapped in typed service layer |

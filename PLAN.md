@@ -51,16 +51,18 @@ Use this file **step by step**. After each step, **pause** so you can **review**
 
 ---
 
-## Step 02 — Tailwind CSS
+## Step 02 — Tailwind CSS (v4)
 
 | | |
 |---|---|
 | **FR** | FR-6.5 |
-| **Goal** | Tailwind installed and applied in the app shell. |
+| **Goal** | Tailwind **v4** installed and applied in the app shell. |
 
 **Do**
 
-- Add and configure Tailwind per Vite + React docs (v3 or v4 per DESIGN).
+- Install **`tailwindcss`** and **`@tailwindcss/vite`** (Tailwind v4 official Vite integration). No separate `postcss` / `autoprefixer` install for the default path—the Vite plugin handles the pipeline.
+- In **`vite.config.ts`**, add the `@tailwindcss/vite` plugin alongside `@vitejs/plugin-react`.
+- In the app’s global CSS entry (e.g. **`src/index.css`**), add **`@import "tailwindcss";`** and remove legacy Vite/React boilerplate CSS that would conflict, if any.
 - Replace placeholder with a minimal layout (header + main) using Tailwind classes.
 
 **Tests**
@@ -73,7 +75,7 @@ Use this file **step by step**. After each step, **pause** so you can **review**
 - [ ] Global/base styles don’t fight the table later (keep base minimal).
 - [ ] `npm test` passes.
 
-**Commit message:** `chore: add Tailwind CSS`
+**Commit message:** `chore: add Tailwind CSS v4`
 
 ---
 
