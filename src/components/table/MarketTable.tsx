@@ -39,9 +39,15 @@ export type MarketTableProps = {
   coins: CoinMarket[]
   /** Stub until detail drawer (Step 26); keyboard/mouse row activation. */
   onSelectCoin?: (id: string) => void
+  /** From `?coin=` — highlights the matching row (FR-4.7). */
+  selectedCoinId?: string | null
 }
 
-export function MarketTable({ coins, onSelectCoin }: MarketTableProps) {
+export function MarketTable({
+  coins,
+  onSelectCoin,
+  selectedCoinId,
+}: MarketTableProps) {
   const [searchQuery, setSearchQuery] = useState('')
   const [sort, setSort] = useState<{
     column: MarketSortColumn
@@ -122,6 +128,7 @@ export function MarketTable({ coins, onSelectCoin }: MarketTableProps) {
                 <TableRow
                   key={coin.id}
                   coin={coin}
+                  selected={coin.id === selectedCoinId}
                   onActivate={
                     onSelectCoin ? () => onSelectCoin(coin.id) : undefined
                   }

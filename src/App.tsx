@@ -2,12 +2,18 @@ import { MarketTable } from './components/table/MarketTable'
 import { SkeletonTable } from './components/table/SkeletonTable'
 import { ErrorBanner } from './components/ui/ErrorBanner'
 import { getMarketsErrorDisplay } from './constants/marketsErrors'
+import { useCoinSearchParam } from './hooks/useCoinSearchParam'
 import { useMarkets } from './hooks/useMarkets'
 
 function App() {
   const { data, isError, error, refetch, isPending } = useMarkets()
+  const { coinId, setCoinId } = useCoinSearchParam()
 
   const errorDisplay = isError ? getMarketsErrorDisplay(error) : null
+
+  /** URL `?coin=` may reference an id outside the current page; derive selection without mutating history. */
+  const selectedCoinId =
+    coinId && data?.some((c) => c.id === coinId) ? coinId : null
 
   return (
     <div className="flex min-h-screen flex-col bg-slate-50 text-slate-900">
@@ -33,10 +39,8 @@ function App() {
         ) : (
           <MarketTable
             coins={data ?? []}
-            onSelectCoin={() => {
-              /* Detail drawer — Step 26 */
-              console.log("onSelectCoin");
-            }}
+            selectedCoinId={selectedCoinId}
+            onSelectCoin={(id) => setCoinId(id)}
           />
         )}
       </main>

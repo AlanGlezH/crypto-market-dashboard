@@ -11,6 +11,8 @@ export type TableRowProps = {
   coin: CoinMarket
   /** When set, row is focusable and activates with Enter/Space (and click). */
   onActivate?: () => void
+  /** Matches URL `?coin=` selection (FR-4.7). */
+  selected?: boolean
 }
 
 function Change24hCell({ pct }: { pct: number | null }) {
@@ -41,8 +43,7 @@ function Change24hCell({ pct }: { pct: number | null }) {
   )
 }
 
-export function TableRow({ coin, onActivate }: TableRowProps) {
-  
+export function TableRow({ coin, onActivate, selected }: TableRowProps) {
   function handleKeyDown(e: KeyboardEvent<HTMLTableRowElement>) {
     if (!onActivate) return
     if (e.key === 'Enter' || e.key === ' ') {
@@ -56,9 +57,12 @@ export function TableRow({ coin, onActivate }: TableRowProps) {
 
   return (
     <tr
+      aria-current={selected ? 'true' : undefined}
       aria-label={interactive ? `View details: ${label}` : undefined}
       tabIndex={interactive ? 0 : undefined}
       className={`border-b border-slate-100 last:border-b-0 ${
+        selected ? 'bg-slate-100/70' : ''
+      } ${
         interactive
           ? 'cursor-pointer hover:bg-slate-50/80 focus-visible:bg-slate-50/80 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-slate-400'
           : ''
