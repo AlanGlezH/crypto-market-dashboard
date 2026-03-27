@@ -25,6 +25,8 @@ export interface CoinDetail {
   image?: string | { large?: string; small?: string; thumb?: string }
   market_data?: {
     current_price?: { usd?: number | null }
+    /** Present on full coin response; optional in typings. */
+    price_change_percentage_24h?: number | null
     ath?: { usd?: number | null }
     ath_date?: { usd?: string | null }
     atl?: { usd?: number | null }

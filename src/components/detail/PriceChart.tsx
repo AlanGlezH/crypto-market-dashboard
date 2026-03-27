@@ -1,5 +1,6 @@
-import type { ReactNode } from 'react'
+import { useId, type ReactNode } from 'react'
 import {
+  Area,
   CartesianGrid,
   Line,
   LineChart,
@@ -48,7 +49,7 @@ function xTickIndices(length: number): number[] {
   return [0, mid, length - 1]
 }
 
-const CHART_STROKE = '#475569' // slate-600
+const CHART_STROKE = '#2563eb' // blue-600 — drawer mock
 /** Fixed size so layout and tests stay deterministic (jsdom). */
 const CHART_W = 340
 const CHART_H = 220
@@ -100,10 +101,16 @@ function tooltipValue(value: unknown): string {
   return formatUSD(Number.NaN)
 }
 
-function ChartLinePlot({ rows }: { rows: ChartRow[] }) {
+function ChartLinePlot({
+  rows,
+  fillGradientId,
+}: {
+  rows: ChartRow[]
+  fillGradientId: string
+}) {
   return (
     <div
-      className="mt-3 max-w-full overflow-x-auto"
+      className="mt-4 max-w-full overflow-x-auto rounded-lg bg-slate-50/50 px-1 py-2"
       role="img"
       aria-label="7-day price chart"
     >
@@ -111,8 +118,14 @@ function ChartLinePlot({ rows }: { rows: ChartRow[] }) {
         width={CHART_W}
         height={CHART_H}
         data={rows}
-        margin={{ top: 8, right: 8, left: 0, bottom: 4 }}
+        margin={{ top: 12, right: 6, left: 2, bottom: 8 }}
       >
+        <defs>
+          <linearGradient id={fillGradientId} x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#3b82f6" stopOpacity={0.32} />
+            <stop offset="100%" stopColor="#3b82f6" stopOpacity={0} />
+          </linearGradient>
+        </defs>
         <CartesianGrid
           strokeDasharray="3 3"
           stroke="#e2e8f0"
@@ -125,12 +138,12 @@ function ChartLinePlot({ rows }: { rows: ChartRow[] }) {
           ticks={xTickIndices(rows.length)}
           tickFormatter={(idx: number) => formatAxisDate(rows[idx]?.ms ?? 0)}
           tick={{ fontSize: 11, fill: '#64748b' }}
-          axisLine={{ stroke: '#cbd5e1' }}
+          axisLine={{ stroke: '#e2e8f0' }}
         />
         <YAxis
           domain={['auto', 'auto']}
           tickFormatter={(v: number) => formatUSD(v)}
-          width={56}
+          width={58}
           tick={{ fontSize: 11, fill: '#64748b' }}
           axisLine={false}
           tickLine={false}
@@ -151,6 +164,13 @@ function ChartLinePlot({ rows }: { rows: ChartRow[] }) {
             borderRadius: 8,
             border: '1px solid #e2e8f0',
           }}
+        />
+        <Area
+          type="monotone"
+          dataKey="price"
+          stroke="none"
+          fill={`url(#${fillGradientId})`}
+          isAnimationActive={false}
         />
         <Line
           type="monotone"
@@ -180,6 +200,7 @@ function priceChartBodyKey(
 
 /** 7-day USD price series from CoinGecko `market_chart` (FR-4.4). */
 export function PriceChart({ coinId }: PriceChartProps) {
+  const fillGradientId = useId().replace(/:/g, '')
   const { data, isPending, isError, refetch } = useMarketChart(coinId)
   const rows = toRows(data?.prices)
   const key = priceChartBodyKey(isPending, isError, rows.length)
@@ -188,17 +209,19 @@ export function PriceChart({ coinId }: PriceChartProps) {
     loading: () => <ChartLoadingSkeleton />,
     error: () => <ChartErrorPanel onRetry={() => void refetch()} />,
     empty: () => <ChartEmptyMessage />,
-    chart: () => <ChartLinePlot rows={rows} />,
+    chart: () => (
+      <ChartLinePlot rows={rows} fillGradientId={fillGradientId} />
+    ),
   }
 
   return (
     <section
-      className="mt-8 border-t border-slate-100 pt-6"
+      className="mt-10 border-t border-slate-100 pt-8"
       aria-labelledby="price-chart-heading"
     >
       <h3
         id="price-chart-heading"
-        className="text-xs font-semibold uppercase tracking-wide text-slate-500"
+        className="text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-500"
       >
         7-day price (USD)
       </h3>

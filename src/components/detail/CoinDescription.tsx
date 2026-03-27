@@ -37,24 +37,24 @@ export function CoinDescription({
 
   return (
     <section
-      className="mt-8 border-t border-slate-100 pt-6"
+      className="mt-10 border-t border-slate-100 pt-8"
       aria-labelledby="coin-description-heading"
     >
       <h3
         id="coin-description-heading"
-        className="text-xs font-semibold uppercase tracking-wide text-slate-500"
+        className="text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-500"
       >
         About
       </h3>
       {hasDescription ? (
-        <div className="mt-2">
-          <p className="text-sm leading-relaxed text-slate-700 whitespace-pre-wrap">
+        <div className="mt-3">
+          <p className="text-sm leading-relaxed text-slate-600 whitespace-pre-wrap">
             {displayText}
           </p>
           {isExpandable ? (
             <button
               type="button"
-              className="mt-2 text-sm font-medium text-slate-900 underline decoration-slate-400 underline-offset-2 hover:decoration-slate-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-400"
+              className="mt-3 text-sm font-semibold text-blue-600 underline decoration-blue-600/40 underline-offset-[3px] hover:text-blue-700 hover:decoration-blue-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500"
               onClick={() => setExpanded((e) => !e)}
               aria-expanded={expanded}
             >
@@ -63,7 +63,7 @@ export function CoinDescription({
           ) : null}
         </div>
       ) : (
-        <p className="mt-2 text-sm text-slate-500">
+        <p className="mt-3 text-sm text-slate-500">
           No description available for this asset.
         </p>
       )}

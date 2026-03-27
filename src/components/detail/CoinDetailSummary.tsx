@@ -1,86 +1,88 @@
 import type { CoinDetail } from '../../api/types'
-import { getCoinImageSrc } from '../../utils/coinDetailDisplay'
-import { formatDetailDate, formatUSD } from '../../utils/format'
+import { formatDetailDate, formatPercentage, formatUSD } from '../../utils/format'
+
+const LABEL =
+  'text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-500'
+
+function Change24hInline({ pct }: { pct: number | null | undefined }) {
+  if (pct == null || Number.isNaN(pct)) {
+    return <span className="text-sm text-slate-500">—</span>
+  }
+  let toneClass: string
+  let arrow: string
+  if (pct > 0) {
+    toneClass = 'text-emerald-600'
+    arrow = '▲'
+  } else if (pct < 0) {
+    toneClass = 'text-red-600'
+    arrow = '▼'
+  } else {
+    toneClass = 'text-slate-600'
+    arrow = '—'
+  }
+  return (
+    <span
+      className={`inline-flex items-center gap-1 text-sm font-semibold tabular-nums ${toneClass}`}
+    >
+      <span aria-hidden="true" className="text-xs">
+        {arrow}
+      </span>
+      <span>{formatPercentage(pct)}</span>
+    </span>
+  )
+}
 
 export function CoinDetailSummary({ detail }: { detail: CoinDetail }) {
   const md = detail.market_data
   const price = md?.current_price?.usd
+  const pct24h = md?.price_change_percentage_24h
   const ath = md?.ath?.usd
   const athDate = md?.ath_date?.usd
   const atl = md?.atl?.usd
   const atlDate = md?.atl_date?.usd
-  const imageSrc = getCoinImageSrc(detail.image)
-  const symbol = detail.symbol?.toUpperCase() ?? '—'
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-start gap-4">
-        {imageSrc ? (
-          <img
-            src={imageSrc}
-            alt={`${detail.name} logo`}
-            width={64}
-            height={64}
-            className="h-16 w-16 shrink-0 rounded-full object-cover"
-          />
-        ) : (
-          <div
-            className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full bg-slate-200 text-lg font-semibold text-slate-600"
-            aria-hidden
-          >
-            {(detail.name?.[0] ?? '?').toUpperCase()}
-          </div>
-        )}
-        <div className="min-w-0 flex-1">
-          <p className="truncate text-2xl font-semibold text-slate-900">
-            {detail.name}
-          </p>
-          <p className="text-sm font-medium uppercase tracking-wide text-slate-500">
-            {symbol}
-          </p>
-        </div>
-      </div>
-
+    <div className="space-y-8">
       <section aria-labelledby="detail-current-price-heading">
-        <h3
-          id="detail-current-price-heading"
-          className="text-xs font-semibold uppercase tracking-wide text-slate-500"
-        >
+        <h3 id="detail-current-price-heading" className={LABEL}>
           Current price
         </h3>
-        <p className="mt-1 text-2xl font-semibold tabular-nums text-slate-900">
-          {formatUSD(price)}
-        </p>
+        <div className="mt-2 flex flex-wrap items-baseline gap-x-3 gap-y-1">
+          <p className="text-4xl font-bold tabular-nums tracking-tight text-[#1a1c21]">
+            {formatUSD(price)}
+          </p>
+          <Change24hInline pct={pct24h ?? null} />
+        </div>
       </section>
 
-      <div className="space-y-4 border-t border-slate-100 pt-4">
-        <section aria-labelledby="detail-ath-heading">
-          <h3
-            id="detail-ath-heading"
-            className="text-xs font-semibold uppercase tracking-wide text-slate-500"
-          >
+      <div className="grid grid-cols-2 gap-3">
+        <section
+          className="rounded-xl border border-slate-100 bg-slate-50/90 p-4 shadow-sm"
+          aria-labelledby="detail-ath-heading"
+        >
+          <h3 id="detail-ath-heading" className={LABEL}>
             All-time high
           </h3>
-          <p className="mt-1 font-medium tabular-nums text-slate-900">
+          <p className="mt-2 text-lg font-bold tabular-nums text-[#1a1c21]">
             {formatUSD(ath)}
           </p>
-          <p className="mt-0.5 text-sm text-slate-600">
-            {formatDetailDate(athDate ?? null)}
+          <p className="mt-1 text-[11px] font-semibold uppercase tracking-wide text-slate-500">
+            {formatDetailDate(athDate ?? null).toUpperCase()}
           </p>
         </section>
 
-        <section aria-labelledby="detail-atl-heading">
-          <h3
-            id="detail-atl-heading"
-            className="text-xs font-semibold uppercase tracking-wide text-slate-500"
-          >
+        <section
+          className="rounded-xl border border-slate-100 bg-slate-50/90 p-4 shadow-sm"
+          aria-labelledby="detail-atl-heading"
+        >
+          <h3 id="detail-atl-heading" className={LABEL}>
             All-time low
           </h3>
-          <p className="mt-1 font-medium tabular-nums text-slate-900">
+          <p className="mt-2 text-lg font-bold tabular-nums text-[#1a1c21]">
             {formatUSD(atl)}
           </p>
-          <p className="mt-0.5 text-sm text-slate-600">
-            {formatDetailDate(atlDate ?? null)}
+          <p className="mt-1 text-[11px] font-semibold uppercase tracking-wide text-slate-500">
+            {formatDetailDate(atlDate ?? null).toUpperCase()}
           </p>
         </section>
       </div>

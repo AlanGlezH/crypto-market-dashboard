@@ -1,5 +1,5 @@
 import { QueryClientProvider } from '@tanstack/react-query'
-import { render, screen, waitFor } from '@testing-library/react'
+import { render, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import type { ReactElement } from 'react'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
@@ -96,9 +96,13 @@ describe('DetailDrawer', () => {
     const user = userEvent.setup()
     vi.mocked(coingecko.fetchCoinDetail).mockResolvedValue(FULL_DETAIL)
     const onClose = vi.fn()
-    renderWithQuery(<DetailDrawer coinId="ethereum" onClose={onClose} />)
+    renderWithQuery(<DetailDrawer coinId="bitcoin" onClose={onClose} />)
 
-    await user.click(screen.getByRole('button', { name: /^close$/i }))
+    await waitFor(() => {
+      expect(screen.getByRole('heading', { name: /^bitcoin$/i })).toBeInTheDocument()
+    })
+    const dialog = screen.getByRole('dialog')
+    await user.click(within(dialog).getByRole('button', { name: /^close$/i }))
     expect(onClose).toHaveBeenCalledTimes(1)
   })
 
