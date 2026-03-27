@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react'
 import type { CoinMarket } from '../../api/types'
-import { EmptyState } from '../ui/EmptyState'
-import { SearchInput } from '../ui/SearchInput'
+import { EmptyState } from '../shared/EmptyState'
+import { SearchInput } from '../shared/SearchInput'
 import { filterCoinsBySearch } from '../../utils/marketSearch'
 import {
   DEFAULT_MARKET_SORT,

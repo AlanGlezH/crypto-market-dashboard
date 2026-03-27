@@ -12,7 +12,7 @@ Use this file **step by step**. After each step, **pause** so you can **review**
 4. **`git commit` yourself** using the step’s **suggested message** as the subject line. Messages must follow **[Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/)**: `type(optional scope): description` in the **imperative** (“add”, not “added”). Adjust scope or add a **body**/`BREAKING CHANGE` footer if needed; keep the same type and intent as the suggestion. Do not treat the step as done until you have committed.
 5. Optional: after all steps, revisit **folder structure** (DESIGN §2 note / NFR-DES-3).
 
-**Conventional Commits — types used in this plan:** `feat` (behavior/UI), `fix` (bugs), `chore` (tooling/scaffold/deps), `docs` (README only), `style` (formatting/visual polish without logic change), `test` (tests only—optional split from `feat` if you prefer tiny commits). Scopes like `api`, `table`, `detail`, `ui`, `a11y` match areas under `src/`.
+**Conventional Commits — types used in this plan:** `feat` (behavior/UI), `fix` (bugs), `chore` (tooling/scaffold/deps), `docs` (README only), `style` (formatting/visual polish without logic change), `test` (tests only—optional split from `feat` if you prefer tiny commits). Scopes like `api`, `table`, `detail`, `shared`, `a11y` match areas under `src/`.
 
 **Testing (every step)**
 
@@ -113,7 +113,7 @@ Use this file **step by step**. After each step, **pause** so you can **review**
 
 **Do**
 
-- Create `src/api/`, `src/components/table|detail|ui/`, `src/hooks/`, `src/utils/`.
+- Create `src/api/`, `src/components/table|detail|shared/`, `src/hooks/`, `src/utils/`.
 - Add minimal exports or placeholder components if needed so the project compiles.
 
 **Tests**
@@ -292,7 +292,7 @@ Use this file **step by step**. After each step, **pause** so you can **review**
 
 **Do**
 
-- `components/ui/ErrorBanner.tsx`: message, Retry button, optional variant for rate limit copy.
+- `components/shared/ErrorBanner.tsx`: message, Retry button, optional variant for rate limit copy.
 - In `App` (or markets section): if `useMarkets` is error, show banner; Retry calls `refetch`.
 
 **Tests**
@@ -307,7 +307,7 @@ Use this file **step by step**. After each step, **pause** so you can **review**
 - [ ] No infinite auto-retry loop.
 - [ ] `npm test` passes.
 
-**Commit message:** `feat(ui): add ErrorBanner and wire markets query errors`
+**Commit message:** `feat(shared): add ErrorBanner and wire markets query errors`
 
 ---
 
@@ -331,7 +331,7 @@ Use this file **step by step**. After each step, **pause** so you can **review**
 - [ ] Shown while `useMarkets` is initial loading (and optionally during refetch—your choice; document in README if subtle).
 - [ ] `npm test` passes.
 
-**Commit message:** `feat(ui): add skeleton loading state for markets table`
+**Commit message:** `feat(table): add skeleton loading state for markets table`
 
 ---
 

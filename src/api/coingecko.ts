@@ -28,7 +28,10 @@ const MARKET_CHART_SEARCH = new URLSearchParams({
  * {@link ApiError} on other non-OK responses.
  */
 export async function coingeckoApiFetch<T>(path: string): Promise<T> {
+  console.log( "before");
   const res = await fetch(`${COINGECKO_API_V3_URL}${path}`)
+
+  console.log({res});
 
   if (res.status === 429) {
     throw new RateLimitError()

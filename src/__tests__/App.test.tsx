@@ -89,7 +89,7 @@ describe('App', () => {
 
     expect(screen.getByRole('alert')).toBeInTheDocument()
     expect(
-      screen.getByText(/temporarily limiting requests/i),
+      screen.getByText(/too many requests\. try again in a moment/i),
     ).toBeInTheDocument()
 
     await user.click(screen.getByRole('button', { name: /^retry$/i }))

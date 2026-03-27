@@ -6,7 +6,7 @@ import {
   restoreMarketRowFocus,
 } from './utils/restoreMarketRowFocus'
 import { SkeletonTable } from './components/table/SkeletonTable'
-import { ErrorBanner } from './components/ui/ErrorBanner'
+import { ErrorBanner } from './components/shared/ErrorBanner'
 import {
   getMarketsErrorDisplay,
   type MarketsErrorDisplay,
@@ -33,11 +33,14 @@ function MarketContent({
 }: MarketContentProps) {
   if (errorDisplay) {
     return (
-      <ErrorBanner
-        message={errorDisplay.message}
-        variant={errorDisplay.variant}
-        onRetry={onMarketsRetry}
-      />
+      <div className="flex min-h-[min(520px,calc(100vh-12rem))] flex-1 items-center justify-center py-10">
+        <ErrorBanner
+          message={errorDisplay.message}
+          variant={errorDisplay.variant}
+          metaLeft={errorDisplay.metaLeft}
+          onRetry={onMarketsRetry}
+        />
+      </div>
     )
   }
   if (isPending) {
@@ -86,7 +89,10 @@ function App() {
           Top 20 by market cap (USD)
         </p>
       </header>
-      <main className="flex-1 p-6" inert={selectedCoinId != null}>
+      <main
+        className="flex flex-1 flex-col p-6"
+        inert={selectedCoinId != null}
+      >
         <MarketContent
           errorDisplay={errorDisplay}
           isPending={isPending}
