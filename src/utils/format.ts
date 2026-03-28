@@ -1,50 +1,58 @@
-/** Price, market cap, and percent formatting for the markets table (FR-2.3, FR-2.5). */
+const FORMAT_EMPTY = '—'
+const TRILLION = 1_000_000_000_000
+const BILLION = 1_000_000_000
+const MILLION = 1_000_000
 
-const USD = new Intl.NumberFormat('en-US', {
+const usdFormatter = new Intl.NumberFormat('en-US', {
   style: 'currency',
   currency: 'USD',
+  minimumFractionDigits: 2,
   maximumFractionDigits: 2,
 })
 
-export function formatUSD(value: number | null | undefined): string {
-  if (value == null || Number.isNaN(value)) {
-    return '—'
-  }
-  return USD.format(value)
-}
+// Avoid mixing style:"currency" with significantDigits due to strict TS Intl types;
+// prepend "$" manually instead.
+const usdBelowOneFormatter = new Intl.NumberFormat('en-US', {
+  minimumSignificantDigits: 3,
+  maximumSignificantDigits: 6,
+})
 
-export function formatMarketCap(n: number | null | undefined): string {
-  if (n == null || Number.isNaN(n)) {
-    return '—'
-  }
-  if (n >= 1e12) {
-    return `$${(n / 1e12).toFixed(2)}T`
-  }
-  if (n >= 1e9) {
-    return `$${(n / 1e9).toFixed(1)}B`
-  }
-  if (n >= 1e6) {
-    return `$${(n / 1e6).toFixed(0)}M`
-  }
-  return `$${n.toLocaleString('en-US')}`
+const percentFormatter = new Intl.NumberFormat('en-US', {
+  minimumFractionDigits: 2,
+  maximumFractionDigits: 2,
+  signDisplay: 'exceptZero',
+})
+
+const dateFormatter = new Intl.DateTimeFormat('en-US', {
+  month: 'short',
+  day: 'numeric',
+  year: 'numeric',
+})
+
+export function formatUSD(value: number | null | undefined): string {
+  if (value == null || Number.isNaN(value)) return FORMAT_EMPTY
+  if (value >= 1) return usdFormatter.format(value)
+  return `$${usdBelowOneFormatter.format(value)}`
 }
 
 export function formatPercentage(value: number | null | undefined): string {
-  if (value == null || Number.isNaN(value)) {
-    return '—'
-  }
-  const sign = value > 0 ? '+' : ''
-  return `${sign}${value.toFixed(2)}%`
+  if (value == null || Number.isNaN(value)) return FORMAT_EMPTY
+  const rounded = parseFloat(value.toFixed(2))
+  const display = rounded === 0 ? 0 : value
+  return `${percentFormatter.format(display)}%`
 }
 
-/** ISO date strings from CoinGecko (e.g. ATH/ATL); invalid or missing → em dash. */
-export function formatDetailDate(iso: string | null | undefined): string {
-  if (!iso) {
-    return '—'
-  }
-  const date = new Date(iso)
-  if (Number.isNaN(date.getTime())) {
-    return '—'
-  }
-  return new Intl.DateTimeFormat('en-US', { dateStyle: 'medium' }).format(date)
+export function formatMarketCap(value: number | null | undefined): string {
+  if (value == null || Number.isNaN(value)) return FORMAT_EMPTY
+  if (value >= TRILLION) return `$${(value / TRILLION).toFixed(2)}T`
+  if (value >= BILLION) return `$${(value / BILLION).toFixed(1)}B`
+  if (value >= MILLION) return `$${(value / MILLION).toFixed(0)}M`
+  return `$${value.toLocaleString('en-US')}`
+}
+
+export function formatDetailDate(dateString: string | null | undefined): string {
+  if (dateString == null) return FORMAT_EMPTY
+  const date = new Date(dateString)
+  if (Number.isNaN(date.getTime())) return FORMAT_EMPTY
+  return dateFormatter.format(date)
 }
