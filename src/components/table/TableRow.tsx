@@ -5,12 +5,15 @@ import {
   formatPercentage,
   formatUSD,
 } from '../../utils/format'
+import { FavoriteStar } from './FavoriteStar'
 import { Sparkline } from './Sparkline'
 
 export type TableRowProps = {
   coin: CoinMarket
   onActivate?: () => void
   selected?: boolean
+  isFavorite: boolean
+  onToggleFavorite?: () => void
 }
 
 function Change24hCell({ pct }: { pct: number | null }) {
@@ -41,7 +44,13 @@ function Change24hCell({ pct }: { pct: number | null }) {
   )
 }
 
-export function TableRow({ coin, onActivate, selected }: TableRowProps) {
+export function TableRow({
+  coin,
+  onActivate,
+  selected,
+  isFavorite,
+  onToggleFavorite,
+}: TableRowProps) {
   function handleKeyDown(e: KeyboardEvent<HTMLTableRowElement>) {
     if (!onActivate) return
     if (e.key === 'Enter' || e.key === ' ') {
@@ -68,6 +77,15 @@ export function TableRow({ coin, onActivate, selected }: TableRowProps) {
       onClick={interactive ? onActivate : undefined}
       onKeyDown={interactive ? handleKeyDown : undefined}
     >
+      <td className="w-10 px-2 py-3 align-middle">
+        {onToggleFavorite ? (
+          <FavoriteStar
+            coinName={coin.name}
+            active={isFavorite}
+            onToggle={onToggleFavorite}
+          />
+        ) : null}
+      </td>
       <td className="px-4 py-3 tabular-nums text-slate-700">
         {coin.market_cap_rank ?? '—'}
       </td>

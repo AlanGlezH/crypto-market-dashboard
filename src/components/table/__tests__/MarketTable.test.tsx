@@ -1,8 +1,9 @@
 import { render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { axe } from 'jest-axe'
-import { describe, expect, it, vi } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 import type { CoinMarket } from '../../../api/types'
+import { STORAGE_KEY } from '../../../utils/favoritesStorage'
 import { MarketTable } from '../MarketTable'
 
 const FIXTURE_COINS: CoinMarket[] = [
@@ -31,6 +32,10 @@ const FIXTURE_COINS: CoinMarket[] = [
 ]
 
 describe('MarketTable', () => {
+  beforeEach(() => {
+    localStorage.removeItem(STORAGE_KEY)
+  })
+
   it('renders column headers and row data with formatting', () => {
     render(<MarketTable coins={FIXTURE_COINS} />)
 
@@ -63,10 +68,10 @@ describe('MarketTable', () => {
     const btcRow = screen.getByText('Bitcoin').closest('tr') as HTMLElement
     const ethRow = screen.getByText('Ethereum').closest('tr') as HTMLElement
 
-    expect(btcRow.querySelector('[aria-hidden="true"]')).toHaveTextContent('▲')
+    expect(within(btcRow).getByText('▲')).toBeInTheDocument()
     expect(btcRow).toHaveTextContent('+2.50%')
 
-    expect(ethRow.querySelector('[aria-hidden="true"]')).toHaveTextContent('▼')
+    expect(within(ethRow).getByText('▼')).toBeInTheDocument()
     expect(ethRow).toHaveTextContent('-0.82%')
   })
 

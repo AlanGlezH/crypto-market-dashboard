@@ -19,6 +19,9 @@ export function SkeletonTable() {
       <table className="w-full min-w-[760px] border-collapse text-left text-sm">
         <thead>
           <tr className="border-b border-slate-200 bg-slate-50">
+            <th scope="col" className="w-10 p-0 align-middle">
+              <span className="sr-only">Favorites</span>
+            </th>
             {COLUMN_LABELS.map((label) => (
               <th
                 key={label}
@@ -36,6 +39,7 @@ export function SkeletonTable() {
               key={rowIndex}
               className="border-b border-slate-100 last:border-b-0"
             >
+              <td className="w-10 px-2 py-3" aria-hidden={true} />
               {COLUMN_LABELS.map((label) => (
                 <td
                   key={label}
