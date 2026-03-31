@@ -1,3 +1,5 @@
+import type { KeyboardEvent, MouseEvent } from 'react'
+
 type FavoriteStarProps = {
   coinName: string
   active: boolean
@@ -45,6 +47,17 @@ export function FavoriteStar({ coinName, active, onToggle }: FavoriteStarProps) 
     ? `Remove ${coinName} from favorites`
     : `Add ${coinName} to favorites`
 
+  function handleClick(e: MouseEvent<HTMLButtonElement>) {
+    e.stopPropagation()
+    onToggle()
+  }
+
+  function handleKeyDown(e: KeyboardEvent<HTMLButtonElement>) {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.stopPropagation()
+    }
+  }
+
   return (
     <button
       type="button"
@@ -55,10 +68,8 @@ export function FavoriteStar({ coinName, active, onToggle }: FavoriteStarProps) 
           ? 'inline-flex shrink-0 rounded p-0.5 text-amber-400 transition-colors hover:text-amber-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-400'
           : 'inline-flex shrink-0 rounded p-0.5 text-slate-300 transition-colors hover:text-slate-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-400'
       }
-      onClick={(e) => {
-        e.stopPropagation()
-        onToggle()
-      }}
+      onClick={handleClick}
+      onKeyDown={handleKeyDown}
     >
       {active ? <StarFilled /> : <StarOutline />}
     </button>

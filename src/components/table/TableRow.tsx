@@ -52,8 +52,11 @@ export function TableRow({
   onToggleFavorite,
 }: TableRowProps) {
   function handleKeyDown(e: KeyboardEvent<HTMLTableRowElement>) {
-    if (!onActivate) return
-    if (e.key === 'Enter' || e.key === ' ') {
+    if (
+      onActivate &&
+      e.target === e.currentTarget &&
+      (e.key === 'Enter' || e.key === ' ')
+    ) {
       e.preventDefault()
       onActivate()
     }
