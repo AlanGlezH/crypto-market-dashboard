@@ -8,14 +8,16 @@ v1.0 · draft · generated from challenge specs
 
 ## 1. Stack
 
-| Area | Choice | Rationale |
-|---|---|---|
-| Build tool | Vite + React + TS | Fast DX, native ESM, no CRA bloat |
-| Data fetching | TanStack Query v5 | Required by spec; handles caching, background refresh, stale state |
-| Styling | Tailwind CSS v4 | Preferred by spec; utility-first, consistent spacing/color (`@tailwindcss/vite`) |
-| Charts | Recharts | React-native, composable, good TS support |
-| Routing | URL params only | No page transitions needed; `?coin=bitcoin` for detail state |
-| HTTP client | native fetch | No extra dependency; wrapped in typed service layer |
+
+| Area          | Choice            | Rationale                                                                        |
+| ------------- | ----------------- | -------------------------------------------------------------------------------- |
+| Build tool    | Vite + React + TS | Fast DX, native ESM, no CRA bloat                                                |
+| Data fetching | TanStack Query v5 | Required by spec; handles caching, background refresh, stale state               |
+| Styling       | Tailwind CSS v4   | Preferred by spec; utility-first, consistent spacing/color (`@tailwindcss/vite`) |
+| Charts        | Recharts          | React-native, composable, good TS support                                        |
+| Routing       | URL params only   | No page transitions needed; `?coin=bitcoin` for detail state                     |
+| HTTP client   | native fetch      | No extra dependency; wrapped in typed service layer                              |
+
 
 ---
 
@@ -138,13 +140,15 @@ export function useCoinDetail(id: string | null) {
 
 ## 5. State strategy
 
-| State | Where | Why |
-|---|---|---|
-| Selected coin (drawer) | URL param `?coin=bitcoin` | Survives reload, shareable link |
-| Search query | `useState` in App | Ephemeral, no reason to persist |
-| Sort column + direction | `useState` in MarketTable | Local UI state, client-side only |
-| Market data | React Query cache | Shared across components, auto-refreshed |
-| Detail + chart data | React Query cache | Keyed by coin id, cached 5 min |
+
+| State                   | Where                     | Why                                      |
+| ----------------------- | ------------------------- | ---------------------------------------- |
+| Selected coin (drawer)  | URL param `?coin=bitcoin` | Survives reload, shareable link          |
+| Search query            | `useState` in App         | Ephemeral, no reason to persist          |
+| Sort column + direction | `useState` in MarketTable | Local UI state, client-side only         |
+| Market data             | React Query cache         | Shared across components, auto-refreshed |
+| Detail + chart data     | React Query cache         | Keyed by coin id, cached 5 min           |
+
 
 ---
 
@@ -164,7 +168,7 @@ export function useCoinDetail(id: string | null) {
 
 ### Sparkline
 
-Use a headless `<Sparkline />` component that renders a small `ResponsiveContainer + LineChart` from Recharts with no axes, no tooltip, no dots. ~60×32px inline. Data is **7d** (`sparkline_in_7d.price`); **stroke color** follows **`price_change_percentage_24h`** (green if positive, red if negative, neutral if missing or zero) so the row matches the spec’s 24h % column and avoids conflicting “7d shape vs 24h sign” signals. Acceptable alternative: **neutral** stroke (e.g. gray) and rely on the 24h % cell for red/green—do **not** derive stroke color from 7d start/end unless the UI explicitly labels that as a week trend.
+Use a headless `<Sparkline />` component that renders a small `ResponsiveContainer + LineChart` from Recharts with no axes, no tooltip, no dots. ~60×32px inline. Data is **7d** (`sparkline_in_7d.price`); **stroke color** follows `**price_change_percentage_24h`** (green if positive, red if negative, neutral if missing or zero) so the row matches the spec’s 24h % column and avoids conflicting “7d shape vs 24h sign” signals. Acceptable alternative: **neutral** stroke (e.g. gray) and rely on the 24h % cell for red/green—do **not** derive stroke color from 7d start/end unless the UI explicitly labels that as a week trend.
 
 ### Market cap formatting
 
@@ -218,7 +222,14 @@ Optional: link to a Vercel/Netlify deploy if you add one.
 
 ## 10. Open decisions (to resolve before implementation)
 
-- [ ] Drawer vs modal for the detail panel?
-- [ ] Include Zod for runtime API validation?
-- [x] Sparkline stroke color — **decided:** tie to **24h %** (or neutral stroke); see §7 Sparkline.
-- [ ] Folder structure: by type (current) or by feature (`features/market/`, `features/detail/`)?
+- Drawer vs modal for the detail panel?
+- Include Zod for runtime API validation?
+- Sparkline stroke color — **decided:** tie to **24h %** (or neutral stroke); see §7 Sparkline.
+- Folder structure: by type (current) or by feature (`features/market/`, `features/detail/`)?
+
+
+
+
+
+Favorites / Watchlist  
+  
